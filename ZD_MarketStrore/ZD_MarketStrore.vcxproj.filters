@@ -18,5 +18,112 @@
     <ClCompile Include="ZD_MarketStrore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="tools\log\log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mysqlDb\mysqlConnPool\mySqlConnPool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\winDump\WinDump.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="appConfig\appConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="market\ZdMarket\ZdMarket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="market\marketManager\marketManagerBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="communicate\channel\chananel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="communicate\endPoint\endpoint.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="communicate\eventDispatcher\event\event.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="communicate\mysqlChannel\mysqlChannel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="communicate\protocal\marketStroreProtocal\marketStroreProtocal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="include\globalInclude.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="market\ZdFuture\zdFuture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="market\ZdMarketManager\ZdMrarketManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="staticDatas\staticDatas.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tools\log\log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\nlohmann\json.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mysqlDb\mysqlConnPool\mySqlConnPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\winDump\WinDump.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="appConfig\appConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="market\ZdMarket\ZdMarket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\globalInclude.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="market\marketManager\marketManagerBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="communicate\channel\chananel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="communicate\endPoint\endpoint.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="communicate\eventDispatcher\event_dispatcher.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="communicate\eventDispatcher\event\event.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="communicate\eventDispatcher\eventHandler\event_handler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="communicate\protocal\protocol.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="communicate\mysqlChannel\mysqlChanel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="communicate\protocal\marketStroreProtocal\marketStroreProtocal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="market\ZdFuture\zdFuture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="market\ZdMarketManager\ZdMarketManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="staticDatas\staticDatas.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mysqlDb\appDabaseDef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

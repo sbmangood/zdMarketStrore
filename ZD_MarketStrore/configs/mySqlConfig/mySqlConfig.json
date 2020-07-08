@@ -1,0 +1,9 @@
+{
+	"connect":
+	{
+		"url"			:	"tcp://127.0.0.1:3306",
+		"user"			:	"root",
+		"passwd"		:	"123456",
+		"dbName"		:	"ywh_test"
+	}
+}

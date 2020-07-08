@@ -1,0 +1,15 @@
+
+{
+	"zDMarketConfig":
+	{
+		"userId"			:	"sy01",
+		"password"			:	"888888",
+		"heartBeat"			:	"150",
+		"authorCode"		:	"porl99bbo/jrfib5xxgagza5giggzr/u",
+		"macAddress"		:	"song_123",
+		"computerName"		:	"wjq-pc",
+		"softwareName"		:	"api",
+		"serverAddress"		:	"192.168.1.181:4787",
+		"softwareVersion"	:	"2"
+	}
+}

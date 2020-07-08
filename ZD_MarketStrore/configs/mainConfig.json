@@ -1,0 +1,12 @@
+{
+	"communicate"	:
+	{
+		"tcpServerIp"		:	"127.0.0.1",
+		"tcpServerPort"		:	10010,
+
+		"udpServerIp"		:	"127.0.0.1",
+		"udpServerPort"		:	12000
+	},
+
+	"serialsConfigPath"		:	"./configs/SerialsConfig/serialsConfig.json"
+}

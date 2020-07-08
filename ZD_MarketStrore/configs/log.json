@@ -1,0 +1,6 @@
+{
+  "logLevel": 1,
+  "logPath": "./tmp/log",
+  "hour": 2,
+  "min": 30
+}
