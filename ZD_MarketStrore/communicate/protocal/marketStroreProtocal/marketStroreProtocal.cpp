@@ -46,6 +46,25 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			+ ");";
 			
 	}
+	else if (msg.type() == typeid(CIT_DBMarketData))
+	{
+		CIT_DBMarketData cdd = boost::any_cast<CIT_DBMarketData>(msg);
+		cmd = "insert into " +
+			globalInclude.tipts.tableName + " "
+			+ "("
+			+ globalInclude.tipts.constractNo + ","
+			+ globalInclude.tipts.time + ","
+			+ globalInclude.tipts.price		
+			+ ") "
+
+			+ "VALUES "
+
+			+ "("
+			+ toDbString(cdd.contract) + ","
+			+ toDbString(cdd.time) + ","
+			+ toDbNum(cdd.price)
+			+ ");";
+	}
 	else if (msg.type() == typeid(T_TradeDetailsData))
 	{
 		T_TradeDetailsData ttdts = boost::any_cast<T_TradeDetailsData>(msg);

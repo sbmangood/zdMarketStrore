@@ -47,7 +47,7 @@ public:
 	}
 
 };
-//国内期货实时行情表格
+//内盘期货实时行情表格
 class T_InnPricesTableStruct : public DB_TableStructStoreBase
 {
 public:
@@ -57,7 +57,14 @@ public:
 	const std::string price = "nPrice";
 	std::string createTable()override
 	{
-		return "";
+		std::string  cmd = "create table if not exists "
+			+ tableName
+			+ "( "
+			+ constractNo + " NVARCHAR(20), "
+			+ time + " DATETIME, "
+			+ price + " NUMERIC(15,6)"
+			+ ")ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+		return cmd;
 	}
 };
 
@@ -147,19 +154,42 @@ struct ZD_outExProductSubTable :public DB_TableStructStoreBase
 	}
 };
 
+//内盘需要订阅的品种列表,这个列表从数据表inExProductSubTable读取
+struct ZD_inExProductSubTable :public DB_TableStructStoreBase
+{
+	const std::string tableName = "inExProductSubTable";
+	const std::string subProduct = "subProduct";//like "CME:CL"
+	std::string createTable()override
+	{
+		std::string  cmd = "create table if not exists "
+			+ tableName
+			+ "( "
+			+ subProduct + " NVARCHAR(20)"
+			+ " )ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+		return cmd;
+	}
+};
+
 
 
 /*********************************************************************************************
 	*	data
 /*********************************************************************************************/
-//订阅的品种结构定义
+//订阅的外盘品种结构定义
 struct outExProductSubStruct
 {
 	std::string exchange;
 	std::string product;
 };
 
-//国盘行情存数据库(直达)
+//订阅的内盘品种结构定义
+struct inExProductSubStruct
+{
+	std::string exchange;
+	std::string product;
+};
+
+//外盘行情存数据库(直达)
 struct ZD_DBMarketData
 {
 	std::string contract;
@@ -169,6 +199,13 @@ struct ZD_DBMarketData
 	std::string exchange;
 };
 
+//内盘行情存数据库(CIT)
+struct CIT_DBMarketData
+{
+	std::string contract;
+	std::string time;
+	std::string price;
+};
 //当天交易成交记录存数据库
 struct T_TradeDetailsData
 {

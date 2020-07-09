@@ -38,6 +38,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -131,8 +132,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>./thirdLib/x86/libs/ZdApi/libs;./thirdLib/x86/libs/spdlog/libs;./mysqlDb/lib/win32/vs14;D:\HuPingAn180801\work\mywork\third_lib\TraderServer\Boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcrypto.lib;libssl.lib;mysqlcppconn.lib;mysqlcppconn8.lib;mysqlcppconn8-static.lib;DAApi.lib;mysqlcppconn-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./thirdLib/x86/libs/CIT/libs;./thirdLib/x86/libs/ZdApi/libs;./thirdLib/x86/libs/spdlog/libs;./mysqlDb/lib/win32/vs14;D:\HuPingAn180801\work\mywork\third_lib\TraderServer\Boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;mysqlcppconn.lib;mysqlcppconn8.lib;mysqlcppconn8-static.lib;thostmduserapi.lib;thostmduserapi_se.lib;thosttraderapi_se.lib;DAApi.lib;mysqlcppconn-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,6 +163,7 @@
     <ClCompile Include="communicate\mysqlChannel\mysqlChannel.cpp" />
     <ClCompile Include="communicate\protocal\marketStroreProtocal\marketStroreProtocal.cpp" />
     <ClCompile Include="include\globalInclude.cpp" />
+    <ClCompile Include="market\CIT_Market\CIT_Market.cpp" />
     <ClCompile Include="market\marketManager\marketManagerBase.cpp" />
     <ClCompile Include="market\ZdFuture\zdFuture.cpp" />
     <ClCompile Include="market\ZdMarketManager\ZdMrarketManager.cpp" />
@@ -169,6 +171,7 @@
     <ClCompile Include="mysqlDb\mysqlConnPool\mySqlConnPool.cpp" />
     <ClCompile Include="staticDatas\staticDatas.cpp" />
     <ClCompile Include="tools\log\log.cpp" />
+    <ClCompile Include="tools\stringUtil\StrUtil.cpp" />
     <ClCompile Include="tools\winDump\WinDump.cpp" />
     <ClCompile Include="ZD_MarketStrore.cpp" />
   </ItemGroup>
@@ -183,6 +186,7 @@
     <ClInclude Include="communicate\protocal\marketStroreProtocal\marketStroreProtocal.h" />
     <ClInclude Include="communicate\protocal\protocol.h" />
     <ClInclude Include="include\globalInclude.h" />
+    <ClInclude Include="market\CIT_Market\CIT_Market.h" />
     <ClInclude Include="market\marketManager\marketManagerBase.h" />
     <ClInclude Include="market\ZdFuture\zdFuture.h" />
     <ClInclude Include="market\ZdMarketManager\ZdMarketManager.h" />
@@ -192,6 +196,7 @@
     <ClInclude Include="staticDatas\staticDatas.h" />
     <ClInclude Include="tools\log\log.h" />
     <ClInclude Include="tools\nlohmann\json.hpp" />
+    <ClInclude Include="tools\stringUtil\StrUtil.h" />
     <ClInclude Include="tools\winDump\WinDump.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

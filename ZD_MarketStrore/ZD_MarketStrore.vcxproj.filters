@@ -63,6 +63,12 @@
     <ClCompile Include="staticDatas\staticDatas.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="market\CIT_Market\CIT_Market.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\stringUtil\StrUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tools\log\log.h">
@@ -123,6 +129,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="mysqlDb\appDabaseDef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="market\CIT_Market\CIT_Market.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\stringUtil\StrUtil.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

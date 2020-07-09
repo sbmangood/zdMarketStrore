@@ -28,17 +28,15 @@ struct ZDMarketConfig
 
 	ZDMarketConfig()
 	{
-
-		////期货交易 rainer 给的
-		//heartBeat = "150";
-		//softwareName = "api";
-		//userId = "sy01";//
-		//password = "888888";
-		//softwareVersion = "2";
-		//macAddress = "song_123";
-		//computerName = "WJQ-PC";
-		//serverAddress = "192.168.1.181:4787";
-		//authorCode = "porl99bbo/jrfib5xxgagza5giggzr/u";
+		heartBeat = "150";
+		softwareName = "api";
+		userId = "sy01";//
+		password = "888888";
+		softwareVersion = "2";
+		macAddress = "song_123";
+		computerName = "WJQ-PC";
+		serverAddress = "127.0.0.1:12345";
+		authorCode = "porl99bbo/jrfib5xxgagza5giggzr/u";
 	}
 };
 

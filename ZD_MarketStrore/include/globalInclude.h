@@ -16,6 +16,10 @@
 #include <ZdApi/DAFutureApi.h>
 #include <ZdApi/DAFutureStruct.h>
 
+#include <CIT/ThostFtdcMdApi.h>
+#include <CIT/ThostFtdcUserApiDataType.h>
+#include <CIT/ThostFtdcUserApiStruct.h>
+
 
 
 #define safe_cpy(tar, src)	SafeStrcpy(tar, sizeof(tar), src);
@@ -81,10 +85,13 @@ public:
 	//db name
 	const std::string dbName = "ywh_test";
 	//table names
-	OutFutureLoginTableStruct ofLogin;	//国外期货登陆记录表格
-	T_OutPricesTableStruct topts;		//国外期货实时行情表格	
-	T_TradeDetailsTableStruct ttdts;	//国外当前的成交记录表格
+	OutFutureLoginTableStruct ofLogin;	//外盘期货登陆记录表格
+	T_OutPricesTableStruct topts;		//外盘期货实时行情表格	
+	T_InnPricesTableStruct tipts;		//内盘期货实时行情表格
+	T_TradeDetailsTableStruct ttdts;	//外盘当前的成交记录表格
 	ZD_outExProductSubTable zoest;		//外盘需要订阅的品种列表,这个列表从数据表outExProductSubTable读取
+	ZD_inExProductSubTable ziest;		//内盘盘需要订阅的品种列表,这个列表从数据表inExProductSubTable读取
+	
 
 	std::string lastDay;
 

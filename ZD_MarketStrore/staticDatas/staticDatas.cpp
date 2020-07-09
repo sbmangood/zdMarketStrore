@@ -4,16 +4,29 @@ static LOGGER logger = LoggerUtils::get_mutable_instance().getLogger("staticData
 
 void StaticDatas::init()
 {
-	
+	if (!connectDb())
+	{
+		logger->error("!connectDb in StaticDatas::readDbBaseData()");
+		return;
+	}
 	readDbBaseData();
 }
 
 bool StaticDatas::readDbBaseData()
 {
-	if (!connectDb())
+	if (readOutExProductSubList() && readInExProductSubList())
 	{
-		logger->error("!connectDb in StaticDatas::readDbBaseData()");
+		return true;
 	}
+	else
+	{
+		return false;
+	}
+
+}
+
+bool StaticDatas::readOutExProductSubList()
+{
 	Statement *state;
 	ResultSet *result;
 	//查询
@@ -24,7 +37,7 @@ bool StaticDatas::readDbBaseData()
 		std::string cmd = "use " + dbConfig.dbName;
 		state->execute(cmd);
 	}
-	catch (sql::SQLException &e) 
+	catch (sql::SQLException &e)
 	{
 		logger->error("{}", e.what());
 		return false;
@@ -40,9 +53,9 @@ bool StaticDatas::readDbBaseData()
 		logger->error("{}", e.what());
 		return false;
 	}
-	
-	logger->info("订阅品种列表: ");
-	int cnt=1;
+
+	logger->info("外盘订阅品种列表: ");
+	int cnt = 1;
 	//输出查询
 	while (result->next())
 	{
@@ -55,7 +68,7 @@ bool StaticDatas::readDbBaseData()
 			outExProductSubStruct subS;
 			subS.exchange = subProduct.substr(0, find);
 			subS.product = subProduct.substr(find + 1);
-			outExProductSubList.push_back(subS);
+			outExProductSubList.push_back(std::move(subS));
 			logger->info("{0}->{1}", cnt++, subProduct);
 
 		}
@@ -64,11 +77,68 @@ bool StaticDatas::readDbBaseData()
 
 		}
 	}
-	
+
 
 	delete result;
 	delete state;
-	return false;
+
+	return true;
+}
+bool StaticDatas::readInExProductSubList()
+{
+	Statement *state;
+	ResultSet *result;
+	//查询
+	state = con->createStatement();
+
+	try
+	{
+		std::string cmd = "use " + dbConfig.dbName;
+		state->execute(cmd);
+	}
+	catch (sql::SQLException &e)
+	{
+		logger->error("{}", e.what());
+		return false;
+
+	}
+	std::string query = "select " + iSubTable.subProduct + " from " + iSubTable.tableName;
+	try
+	{
+		result = state->executeQuery(query);
+	}
+	catch (sql::SQLException &e)
+	{
+		logger->error("{}", e.what());
+		return false;
+	}
+
+	logger->info("内盘订阅合约列表: ");
+	int cnt = 1;
+	//输出查询
+	while (result->next())
+	{
+		try
+		{
+			std::string subProduct = result->getString(iSubTable.subProduct);
+
+			inExProductSubStruct subS;
+	
+			subS.product = subProduct;
+			inExProductSubList.push_back(std::move(subS));
+			logger->info("{0}->{1}", cnt++, subProduct);
+
+		}
+		catch (sql::SQLException &e) {
+			logger->error("{}", e.what());
+
+		}
+	}
+
+
+	delete result;
+	delete state;
+	return true;
 }
 
 bool StaticDatas::connectDb()
@@ -90,6 +160,7 @@ bool StaticDatas::connectDb()
 	}
 	if (times <= 0)
 		return false;
+
 	return true;
 }
 

@@ -15,7 +15,10 @@ bool ZdMarket::setEndPoint(std::shared_ptr<Endpoint> ep)
 
 bool ZdMarket::Create()
 {
-/******************/
+
+#define tempTest
+#ifdef tempTest
+/******** can delete later *********/
 m_appConfig.heartBeat = "500";
 m_appConfig.softwareName = "1";
 m_appConfig.userId = "wkx01";
@@ -25,7 +28,9 @@ m_appConfig.macAddress = "song_123";
 m_appConfig.computerName = "WJQ-PC";
 m_appConfig.serverAddress = "192.168.1.215:9017";//"222.73.119.230:9010";222.73.119.230:9016 192.168.1.79:9988
 m_appConfig.authorCode = "j2qUK+rcZC24+glu8C+XRubRYF1w4k0f";
-/******************/
+/***********************************/
+#endif
+
 
 	if (!hasEndPoint)
 	{

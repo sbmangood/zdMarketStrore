@@ -11,5 +11,9 @@
 		"softwareName"		:	"api",
 		"serverAddress"		:	"192.168.1.181:4787",
 		"softwareVersion"	:	"2"
+	},
+	"CIT_MarketConfig":
+	{
+		"ap":	"ap"
 	}
 }
