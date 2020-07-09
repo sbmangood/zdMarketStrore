@@ -4,17 +4,14 @@ static LOGGER logger = LoggerUtils::get_mutable_instance().getLogger("ZdMarketMa
 
 void ZD_MarketManager::start()
 {
-	std::string tm= "tcp://116.236.253.145:42213";
-
-	memcpy(gUpperURL, tm.c_str(), tm.size());
+	cITMarketConfig = ConfigManager::get_mutable_instance().cITMarketConfig;
 
 	if (!createEndPoint())
 		return;
-	createNewTables();
 
+	createNewTables();
 	createZD_Market();
 	createCIT_Market();
-	
 }
 
 void ZD_MarketManager::stop()
@@ -73,12 +70,12 @@ bool ZD_MarketManager::createCIT_Market()
 
 	try {
 		pUserApi = CThostFtdcMdApi::CreateFtdcMdApi();
-		citMarket = std::shared_ptr<CIT_Market>(new CIT_Market(pUserApi));
+		citMarket = std::shared_ptr<CIT_Market>(new CIT_Market(pUserApi, cITMarketConfig));
 		citMarket->setEndPoint(endPointCII);
 		// 注册一事件处理的实例
 		pUserApi->RegisterSpi(citMarket.get());
 		// 设置交易托管系统服务的地址，可以注册多个地址备用
-		pUserApi->RegisterFront(gUpperURL);
+		pUserApi->RegisterFront((char*)cITMarketConfig.url.c_str());
 		// 使客户端开始与后台服务建立连接
 		pUserApi->Init();
 
@@ -96,6 +93,7 @@ void ZD_MarketManager::createNewTables()
 	std::string cmd = "use " + ConfigManager::get_mutable_instance().mySqlConfig.dbName + ";";
 	endPointFuture->send_msg(boost::any(cmd));
 	endPointMarket->send_msg(boost::any(cmd));
+	endPointCII->send_msg(boost::any(cmd));
 	//表一
 	cmd = glInclude.ofLogin.createTable();
 	endPointFuture->send_msg(boost::any(cmd));

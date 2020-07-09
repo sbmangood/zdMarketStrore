@@ -1,8 +1,9 @@
 #include "CIT_Market.h"
 static LOGGER logger = LoggerUtils::get_mutable_instance().getLogger("CIT_Market");
-CIT_Market::CIT_Market(CThostFtdcMdApi *pUserApi)
+CIT_Market::CIT_Market(CThostFtdcMdApi *pUserApi,const CIT_MarketConfig &cf)
 {
 	m_pUserApi = pUserApi;
+	cITMarketConfig = cf;
 
 }
 
@@ -20,10 +21,30 @@ bool CIT_Market::setEndPoint(std::shared_ptr<Endpoint> ep)
 void CIT_Market::OnFrontConnected()
 {
 	logger->info("CII 连接 成功!");
-	std::string bd = "95533";
-	std::string id = "30020196";
-	memcpy(gReqUserLogin.BrokerID, bd.c_str(), bd.size());
-	memcpy(gReqUserLogin.UserID, id.c_str(), id.size());
+	if (cITMarketConfig.brokerID.size() <=sizeof(gReqUserLogin.BrokerID))//mf
+	{
+		memcpy(gReqUserLogin.BrokerID, cITMarketConfig.brokerID.c_str(), cITMarketConfig.brokerID.size());
+	}		
+	else
+	{
+		logger->error("brokerID 太长了");
+	}
+	if (cITMarketConfig.userID.size() <= sizeof(gReqUserLogin.UserID))
+	{
+		memcpy(gReqUserLogin.UserID, cITMarketConfig.userID.c_str(), cITMarketConfig.userID.size());
+	}	
+	else
+	{
+		logger->error("UserID 太长了");
+	}
+	if (cITMarketConfig.passwd.size() <= sizeof(gReqUserLogin.Password))
+	{
+		memcpy(gReqUserLogin.Password, cITMarketConfig.passwd.c_str(), cITMarketConfig.passwd.size());
+	}
+	else
+	{
+		logger->error("passwd 太长了");
+	}
 	// 发出登陆请求
 	m_pUserApi->ReqUserLogin(&gReqUserLogin, 0);
 }
@@ -52,7 +73,8 @@ void CIT_Market::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
 		char** pTtem = Instrumnet;
 		for (auto it = subList.begin(); it != subList.end(); it++)
 		{
-			memcpy((*pTtem), it->product.c_str(), it->product.size());
+
+			*pTtem = (char *)(it->product.c_str());
 			pTtem++;
 		}
 		int ret = m_pUserApi->SubscribeMarketData(Instrumnet, subList.size());
@@ -71,7 +93,15 @@ void CIT_Market::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostF
 void CIT_Market::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument,
 	CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	logger->info("Sub {} maket data ok!", std::string(pSpecificInstrument->InstrumentID));
+	
+	if (pRspInfo->ErrorID == 0)
+	{
+		logger->info("Sub {} maket data ok!", std::string(pSpecificInstrument->InstrumentID));
+	}
+	else
+	{
+		logger->error("OnRspSubMarketData error");
+	}
 }
 
 void CIT_Market::OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument,
@@ -91,10 +121,22 @@ void CIT_Market::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMark
 
 	CIT_DBMarketData zdd;
 	zdd.contract = pDepthMarketData->InstrumentID;
-	zdd.price = pDepthMarketData->LastPrice;
-	zdd.time = pDepthMarketData->UpdateTime;
-	logger->info("测试用的新的行情数据:{}", zdd.contract);
+	zdd.price = std::to_string(pDepthMarketData->LastPrice);
+	std::string time = std::string(pDepthMarketData->UpdateTime);
+	dealTime(time);
 
+	if (cITMarketConfig.uniqueMarket== "true"
+		&&time<cITMarketConfig.endTime && time>cITMarketConfig.startTime)
+	{
+		return;
+	}
+	zdd.time = std::string(pDepthMarketData->TradingDay)+time ;
+	
 	endPoint->send_msg(boost::any(zdd));
 
+}
+
+void CIT_Market::dealTime(std::string &time)
+{
+	time.erase(std::remove(time.begin(), time.end(), ':'), time.end());
 }

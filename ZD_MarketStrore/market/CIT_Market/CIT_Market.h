@@ -6,11 +6,12 @@
 class CIT_Market:public CThostFtdcMdSpi
 {
 public:
-	CIT_Market(CThostFtdcMdApi *pUserApi);
+	CIT_Market(CThostFtdcMdApi *pUserApi,const CIT_MarketConfig &cf);
 	CIT_Market() = delete;
 	~CIT_Market() {}
 
 	bool setEndPoint(std::shared_ptr<Endpoint> ep);
+
 
 	// 当客户端与交易托管系统通信连接断开时，该方法被调用
 	virtual void OnFrontConnected()override;
@@ -41,5 +42,8 @@ private:
 	CThostFtdcMdApi *m_pUserApi;
 	//登录数据
 	CThostFtdcReqUserLoginField gReqUserLogin;
-	char gProductDBStr[255];
+	CIT_MarketConfig			cITMarketConfig;
+	
+private:
+	void dealTime(std::string &time);
 };

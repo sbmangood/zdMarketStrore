@@ -5,10 +5,10 @@ static LOGGER logger = LoggerUtils::get_mutable_instance().getLogger("appConfig"
 bool ConfigManager::parseConfig()
 {	
 	boost::unique_lock<boost::shared_mutex> lock(configLock);
-	boost::property_tree::ptree	tree;
 
 	getMySqlConfig();
 	getZDMarketConfig();
+	getCITMarketConfig();
 }
 
 
@@ -60,6 +60,34 @@ bool ConfigManager::getZDMarketConfig()
 	catch (boost::property_tree::ptree_error&e)
 	{
 		logger->error("getZDMarketConfig() paser config exception:{}", e.what());
+
+		return false;
+	}
+}
+
+bool ConfigManager::getCITMarketConfig()
+{
+
+	try
+	{
+		boost::property_tree::ptree	tree;
+		boost::property_tree::json_parser::read_json(marketConfigPath, tree);
+		boost::property_tree::ptree		cITMarketTree = tree.get_child("CIT_MarketConfig");
+
+		cITMarketConfig.url = cITMarketTree.get<std::string>("url");
+		cITMarketConfig.brokerID = cITMarketTree.get<std::string>("brokerID");
+		cITMarketConfig.userID = cITMarketTree.get<std::string>("userID");
+		cITMarketConfig.passwd = cITMarketTree.get<std::string>("passwd");
+
+		cITMarketConfig.uniqueMarket = cITMarketTree.get<std::string>("uniqueMarket");
+		cITMarketConfig.startTime = cITMarketTree.get<std::string>("startTime");
+		cITMarketConfig.endTime = cITMarketTree.get<std::string>("endTime");
+
+		return true;
+	}
+	catch (boost::property_tree::ptree_error&e)
+	{
+		logger->error("getCITMarketConfig() paser config exception:{}", e.what());
 
 		return false;
 	}

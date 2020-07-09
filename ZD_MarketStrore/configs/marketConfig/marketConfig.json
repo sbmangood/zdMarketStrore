@@ -14,6 +14,13 @@
 	},
 	"CIT_MarketConfig":
 	{
-		"ap":	"ap"
+		"url"				:	"tcp://116.236.253.145:42213",
+		"brokerID"			:	"95533",
+		"userID"			:	"30020196",
+		"passwd"			:	"123456",
+
+		"uniqueMarket"		:	"true",
+		"startTime"			:	"083000",
+		"endTime"			:	"093000"
 	}
 }

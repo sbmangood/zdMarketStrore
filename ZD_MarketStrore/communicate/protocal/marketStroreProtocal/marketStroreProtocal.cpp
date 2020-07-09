@@ -62,7 +62,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			+ "("
 			+ toDbString(cdd.contract) + ","
 			+ toDbString(cdd.time) + ","
-			+ toDbNum(cdd.price)
+			+ toDbString(cdd.price)
 			+ ");";
 	}
 	else if (msg.type() == typeid(T_TradeDetailsData))

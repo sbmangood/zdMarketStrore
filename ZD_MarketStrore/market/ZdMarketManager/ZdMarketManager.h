@@ -30,7 +30,7 @@ private:
 	CThostFtdcMdApi				*pUserApi;
 
 	char						gUpperURL[128];
-
+	CIT_MarketConfig			cITMarketConfig;
 private:
 	void createNewTables();
 	bool createEndPoint();

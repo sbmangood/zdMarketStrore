@@ -4,6 +4,7 @@ static LOGGER logger = LoggerUtils::get_mutable_instance().getLogger("staticData
 
 void StaticDatas::init()
 {
+	dbConfig = ConfigManager::get_mutable_instance().mySqlConfig;
 	if (!connectDb())
 	{
 		logger->error("!connectDb in StaticDatas::readDbBaseData()");
@@ -20,6 +21,7 @@ bool StaticDatas::readDbBaseData()
 	}
 	else
 	{
+		logger->error("readOutExProductSubList() && readInExProductSubList() err");
 		return false;
 	}
 

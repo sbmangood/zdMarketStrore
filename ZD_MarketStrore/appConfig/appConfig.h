@@ -26,18 +26,7 @@ struct ZDMarketConfig
 	std::string	serverAddress;
 	std::string	softwareVersion;
 
-	ZDMarketConfig()
-	{
-		heartBeat = "150";
-		softwareName = "api";
-		userId = "sy01";//
-		password = "888888";
-		softwareVersion = "2";
-		macAddress = "song_123";
-		computerName = "WJQ-PC";
-		serverAddress = "127.0.0.1:12345";
-		authorCode = "porl99bbo/jrfib5xxgagza5giggzr/u";
-	}
+
 };
 
 struct MysqlConConfig
@@ -46,14 +35,26 @@ struct MysqlConConfig
 	std::string user;
 	std::string passwd;
 	std::string dbName;
-	MysqlConConfig()
-	{
-		url = "tcp://127.0.0.1:3306";
-		user = "root";
-		passwd = "123456";
-		dbName = "ywh_test";
-	}
+
 	
+};
+
+//内盘CIT 接口配置
+struct CIT_MarketConfig
+{
+	std::string url;
+	std::string brokerID;
+	std::string userID;
+	std::string passwd;
+
+	//因为CIT接口早上9点左右会重复发送昨晚的行情,所以程序后面会判断不存储
+	//uniqueMarket="true"去重,其他的不去重
+	//startTime-endTime 之内数据粗略的不重复发送 
+	//格式:比如 083000-093000 
+	std::string uniqueMarket;
+	std::string startTime;
+	std::string endTime;
+	//to do
 };
 
 
@@ -80,10 +81,11 @@ private:
 public:	
 	MysqlConConfig				mySqlConfig;	//数据库配置
 	ZDMarketConfig				zDMarketConfig; //直达(外盘)账户配置
-
+	CIT_MarketConfig			cITMarketConfig; //内盘CIT 接口配置
 
 private:
 	bool getMySqlConfig();
 	bool getZDMarketConfig();
+	bool getCITMarketConfig();
 
 };
