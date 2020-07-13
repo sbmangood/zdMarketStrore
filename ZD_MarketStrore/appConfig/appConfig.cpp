@@ -25,6 +25,10 @@ bool ConfigManager::getMySqlConfig()
 		mySqlConfig.user= connectTree.get<std::string>("user");
 		mySqlConfig.passwd = connectTree.get<std::string>("passwd");
 		mySqlConfig.dbName = connectTree.get<std::string>("dbName");
+		mySqlConfig.batchTime = 10;
+		mySqlConfig.batchTime = connectTree.get<int>("batchTime");
+		mySqlConfig.batchNum = 10000;
+		mySqlConfig.batchNum = connectTree.get<int>("batchNum");
 
 		return true;
 	}

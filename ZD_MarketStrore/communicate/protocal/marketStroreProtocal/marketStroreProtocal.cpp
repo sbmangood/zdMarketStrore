@@ -4,6 +4,32 @@ static LOGGER logger = LoggerUtils::get_mutable_instance().getLogger("marketStro
 
 MarketStoreProtocal::MarketStoreProtocal()
 {
+	zdMarketBatchStrHead = "insert into " +
+		globalInclude.topts.tableName + " "
+		+ "("
+		+ globalInclude.topts.contract + ","
+		+ globalInclude.topts.dueDate + ","
+		+ globalInclude.topts.time + ","
+		+ globalInclude.topts.price + ","
+		+ globalInclude.topts.exchange
+		+ ") "
+		+ "VALUES ";
+
+	citMarketBatchStrHead = "insert into " +
+		globalInclude.tipts.tableName + " "
+		+ "("
+		+ globalInclude.tipts.constractNo + ","
+		+ globalInclude.tipts.time + ","
+		+ globalInclude.tipts.price
+		+ ") "
+
+		+ "VALUES ";
+	marketBatchMaxSize = 10000;
+	marketBatchMaxSecond = 5;
+	zdMarketBatchVector.reserve(marketBatchMaxSize);
+	zdMarketBatchVector.clear();
+	citMarketBatchVector.reserve(marketBatchMaxSize);
+	zdMarketBatchVector.clear();
 
 }
 
@@ -18,7 +44,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 {
 	buffer.clear();
 
-	std::string cmd;
+	std::string cmd="";
 	if (msg.type() == typeid(std::string))
 	{
 		cmd = boost::any_cast<std::string>(msg);
@@ -27,43 +53,84 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 	else if (msg.type() == typeid(ZD_DBMarketData))
 	{
 		ZD_DBMarketData zmd= boost::any_cast<ZD_DBMarketData>(msg);
-		cmd = "insert into " +
-			globalInclude.topts.tableName + " "
-			+ "("
-			+ globalInclude.topts.contract + ","
-			+ globalInclude.topts.dueDate + ","
-			+ globalInclude.topts.time + ","
-			+ globalInclude.topts.price + ","
-			+ globalInclude.topts.exchange
-			+ ") "
-			+ "VALUES "
-			+ "("
+		batchStrStruct temp;
+		temp.sqlStr= 
+			"("
 			+ toDbString(zmd.contract) + ","
-			+ toDbString(zmd.dueDate)+ ","
-			+ toDbString(zmd.time)+","
+			+ toDbString(zmd.dueDate) + ","
+			+ toDbString(zmd.time) + ","
 			+ toDbNum(zmd.price) + ","
 			+ toDbString(zmd.exchange)
-			+ ");";
+			+ ")";
+		temp.time = time(NULL);
+		zdMarketBatchVector.push_back(std::move(temp));
+
+		int len = zdMarketBatchVector.size();
+		if (len >= marketBatchMaxSize
+			|| ( (len >1)&&( (zdMarketBatchVector[len-1].time- zdMarketBatchVector[0].time)> marketBatchMaxSecond) )
+			)
+		{
+			cmd += zdMarketBatchStrHead;
+			auto it = zdMarketBatchVector.begin();
+			cmd += it->sqlStr;
+			it++;
+			for ( ;it!= zdMarketBatchVector.end(); it++)
+			{
+				cmd += ","; cmd += it->sqlStr;
+			}
+			zdMarketBatchVector.clear();
+
+			if (len >= marketBatchMaxSize)
+			{
+				logger->error("¡Ÿ ±≤‚ ‘: batch len >= marketBatchMaxSize");
+			}
+			else
+			{
+				logger->error("¡Ÿ ±≤‚ ‘: batch time");
+			}
+		}		
 			
 	}
 	else if (msg.type() == typeid(CIT_DBMarketData))
 	{
 		CIT_DBMarketData cdd = boost::any_cast<CIT_DBMarketData>(msg);
-		cmd = "insert into " +
-			globalInclude.tipts.tableName + " "
-			+ "("
-			+ globalInclude.tipts.constractNo + ","
-			+ globalInclude.tipts.time + ","
-			+ globalInclude.tipts.price		
-			+ ") "
-
-			+ "VALUES "
-
-			+ "("
+		batchStrStruct temp;
+		temp.sqlStr=
+			"("
 			+ toDbString(cdd.contract) + ","
 			+ toDbString(cdd.time) + ","
 			+ toDbString(cdd.price)
-			+ ");";
+			+ ")";
+
+		temp.time = time(NULL);
+		citMarketBatchVector.push_back(std::move(temp));
+
+		int len = citMarketBatchVector.size();
+		if (len >= marketBatchMaxSize
+			|| ((len > 1) && ((citMarketBatchVector[len - 1].time - citMarketBatchVector[0].time) > marketBatchMaxSecond * 1000))
+			)
+		{
+			std::string tempStr = "";
+			auto it = citMarketBatchVector.begin();
+			tempStr = tempStr + it->sqlStr;
+			it++;
+			for (; it != citMarketBatchVector.end(); it++)
+			{
+				tempStr = tempStr + "," + it->sqlStr;
+			}
+			citMarketBatchVector.clear();
+			cmd = citMarketBatchStrHead + tempStr;
+
+			if (len >= marketBatchMaxSize)
+			{
+				logger->error("¡Ÿ ±≤‚ ‘: batch len >= marketBatchMaxSize citMarketBatchStrHead");
+			}
+			else
+			{
+				logger->error("¡Ÿ ±≤‚ ‘: batch time citMarketBatchStrHead");
+			}
+		}
+
 	}
 	else if (msg.type() == typeid(T_TradeDetailsData))
 	{
@@ -117,6 +184,12 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			+ "LOCALTIME()"
 			+ ");";					
 	}
+	else if (msg.type() == typeid(SwitchDataBase))//SwitchDataBase
+	{
+		SwitchDataBase db = boost::any_cast<SwitchDataBase>(msg);
+		cmd = "use " + db.dbName + ";";
+	}
+
 	if(buffer.capacity()< cmd.length())
 		buffer.resize(cmd.length());
 	sendSize = cmd.length();

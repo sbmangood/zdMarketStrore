@@ -6,6 +6,11 @@
 
 class MarketStoreProtocal :public IProtocol
 {
+	struct batchStrStruct
+	{
+		std::string sqlStr;
+		time_t		time;
+	};
 public:
 	MarketStoreProtocal();
 public:
@@ -19,5 +24,12 @@ private:
 private:
 	std::string toDbString(const std::string & str);
 	std::string toDbNum(const std::string &str);
+
+	int							marketBatchMaxSize;
+	int							marketBatchMaxSecond;
+	std::vector<batchStrStruct>	zdMarketBatchVector;
+	std::vector<batchStrStruct>	citMarketBatchVector;
+	std::string zdMarketBatchStrHead;
+	std::string citMarketBatchStrHead;
 
 };

@@ -19,6 +19,9 @@ int main()
 	StaticDatas::get_mutable_instance().init();
 	ZD_MarketManager::get_mutable_instance().start();
 
-	while (1);
+	while (1)
+	{
+		std::this_thread::sleep_for(std::chrono::seconds(3));
+	}
 }
 

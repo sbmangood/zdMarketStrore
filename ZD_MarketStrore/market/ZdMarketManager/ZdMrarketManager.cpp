@@ -89,8 +89,15 @@ bool ZD_MarketManager::createCIT_Market()
 }
 void ZD_MarketManager::createNewTables()
 {
+
+	std::string cmd;
+	std::string dbName = ConfigManager::get_mutable_instance().mySqlConfig.dbName;
+	//创建数据库
+	cmd = "create database " + dbName;
+	endPointFuture->send_msg(boost::any(cmd));
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 	//切入指定数据库
-	std::string cmd = "use " + ConfigManager::get_mutable_instance().mySqlConfig.dbName + ";";
+	cmd = "use " + dbName + ";";
 	endPointFuture->send_msg(boost::any(cmd));
 	endPointMarket->send_msg(boost::any(cmd));
 	endPointCII->send_msg(boost::any(cmd));

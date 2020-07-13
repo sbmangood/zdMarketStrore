@@ -96,7 +96,8 @@ void CIT_Market::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecific
 	
 	if (pRspInfo->ErrorID == 0)
 	{
-		logger->info("Sub {} maket data ok!", std::string(pSpecificInstrument->InstrumentID));
+		
+		logger->info("Sub  maket data ok!");//, std::string(pSpecificInstrument->InstrumentID)
 	}
 	else
 	{
@@ -124,7 +125,7 @@ void CIT_Market::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMark
 	zdd.price = std::to_string(pDepthMarketData->LastPrice);
 	std::string time = std::string(pDepthMarketData->UpdateTime);
 	dealTime(time);
-
+	logger->info("New  CIT marketData price {} ", zdd.price);
 	if (cITMarketConfig.uniqueMarket== "true"
 		&&time<cITMarketConfig.endTime && time>cITMarketConfig.startTime)
 	{

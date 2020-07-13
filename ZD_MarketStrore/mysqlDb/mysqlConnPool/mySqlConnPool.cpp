@@ -205,10 +205,11 @@ void mysqlConnPooltest()
 	}
 	state = con->createStatement();
 
+
 	try {
 
 		state->execute("use ywh_test22");
-
+	
 		state->execute("create table user_age_table"
 			" ("
 			"name VARCHAR(100), "

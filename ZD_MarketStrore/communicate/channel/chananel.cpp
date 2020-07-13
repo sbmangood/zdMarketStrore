@@ -57,19 +57,27 @@ void IChannel::send_work()
 	while (_sending)
 	{
 		{
+			
 			send_event_.wait(5);
 			{
-				boost::unique_lock<boost::mutex> lock(msg_queue_lock);
+				//boost::unique_lock<boost::mutex> lock(msg_queue_lock);
+				msg_queue_lock.lock();
 				if (!_msg_queue.empty())
 				{
-					boost::any msg = _msg_queue.front();
+					boost::any msg= _msg_queue.front();
 					_msg_queue.pop();
-					
+					msg_queue_lock.unlock();
 					int sendSize = 0;
 					protocol_->encode_data(msg, buffer, sendSize);
 					send_data(&buffer[0], sendSize);
 				}
-			}	
+				else
+				{
+					msg_queue_lock.unlock();
+				}
+	
+			}
+
 		}
 	}
 }

@@ -41,7 +41,10 @@ bool MysqlChannel::start()
 bool MysqlChannel::send_data(const unsigned char* buffer, unsigned int size)
 {
 	std::string cmd = std::string(buffer, buffer+size);
+	if (cmd.size() < 2)
+		return true;
 	Statement *state=nullptr;
+	logger->error("Time start ");
 	try {
 		//if (con->isClosed)
 		//{
@@ -56,9 +59,11 @@ bool MysqlChannel::send_data(const unsigned char* buffer, unsigned int size)
 			logger->error("con == nullptr in MysqlChannel::send_data");
 			return false;
 		}
+		
 		state = con->createStatement();
 		state->execute(cmd);
 		delete state;
+	
 	}
 	catch (sql::SQLException &e) {
 		logger->error("error:{} in MysqlChannel::send_data", e.what());
@@ -68,6 +73,6 @@ bool MysqlChannel::send_data(const unsigned char* buffer, unsigned int size)
 		return false;
 
 	}
-	
+	logger->error("Time end ");
 	return true;
 }

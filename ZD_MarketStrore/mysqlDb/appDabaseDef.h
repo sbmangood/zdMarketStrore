@@ -62,7 +62,8 @@ public:
 			+ "( "
 			+ constractNo + " NVARCHAR(20), "
 			+ time + " DATETIME, "
-			+ price + " NUMERIC(15,6)"
+			+ price + " NUMERIC(15,6),"
+			+ "insertTime timestamp NOT NULL default CURRENT_TIMESTAMP"
 			+ ")ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		return cmd;
 	}
@@ -88,7 +89,8 @@ public:
 			+ dueDate + " DATE, "
 			+ time + " DATETIME, "
 			+ price + " NUMERIC(15,6), "
-			+ exchange + " NVARCHAR(20)"
+			+ exchange + " NVARCHAR(20),"
+			+"insertTime timestamp NOT NULL default CURRENT_TIMESTAMP"
 			+ " )ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		return cmd;
 	}
@@ -129,7 +131,8 @@ public:
 			+ charge + " NUMERIC(10,2), "
 			+ tradeDate + " DATE, "
 			+ tradeTime + " DATETIME, "
-			+ openClose + " NVARCHAR(10)"
+			+ openClose + " NVARCHAR(10),"
+			+"insertTime timestamp  NOT NULL default CURRENT_TIMESTAMP"
 			+ " )ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 		return cmd;
@@ -148,7 +151,7 @@ struct ZD_outExProductSubTable :public DB_TableStructStoreBase
 		std::string  cmd = "create table if not exists "
 			+ tableName
 			+ "( "
-			+ subProduct + " NVARCHAR(20)"
+			+ subProduct + " NVARCHAR(20)"		
 			+ " )ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		return cmd;
 	}
@@ -226,4 +229,15 @@ struct T_TradeDetailsData
 struct DB_LoginData
 {
 	std::string msg;
+};
+
+
+
+/*********************************************************************************************
+	*	other
+/*********************************************************************************************/
+//用于切换数据库指令
+struct SwitchDataBase
+{
+	std::string dbName;
 };

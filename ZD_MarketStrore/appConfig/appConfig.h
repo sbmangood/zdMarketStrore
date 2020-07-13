@@ -36,6 +36,11 @@ struct MysqlConConfig
 	std::string passwd;
 	std::string dbName;
 
+	//因为行情数据量太大存数据库太费时,必须批处理,时间和数量两个条件满足一个条件就触发批处理
+	//需要根据行情实际情况合理的设置值
+	int batchTime;//秒
+	int batchNum;
+
 	
 };
 
