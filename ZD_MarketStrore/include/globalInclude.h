@@ -20,6 +20,8 @@
 #include <CIT/ThostFtdcUserApiDataType.h>
 #include <CIT/ThostFtdcUserApiStruct.h>
 
+#include <boost/thread/executors/basic_thread_pool.hpp>
+
 
 
 #define safe_cpy(tar, src)	SafeStrcpy(tar, sizeof(tar), src);
@@ -43,6 +45,7 @@ struct m_ContractInfor
 	}
 
 };
+
 
 class CLockBool
 {

@@ -200,6 +200,7 @@ struct ZD_DBMarketData
 	std::string time;
 	std::string price;
 	std::string exchange;
+
 };
 
 //内盘行情存数据库(CIT)

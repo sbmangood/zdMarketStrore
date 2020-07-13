@@ -24,12 +24,14 @@ MarketStoreProtocal::MarketStoreProtocal()
 		+ ") "
 
 		+ "VALUES ";
-	marketBatchMaxSize = 10000;
-	marketBatchMaxSecond = 5;
+	marketBatchMaxSize = ConfigManager::get_mutable_instance().mySqlConfig.batchNum;
+	marketBatchMaxSecond = ConfigManager::get_mutable_instance().mySqlConfig.batchTime;
 	zdMarketBatchVector.reserve(marketBatchMaxSize);
 	zdMarketBatchVector.clear();
 	citMarketBatchVector.reserve(marketBatchMaxSize);
 	zdMarketBatchVector.clear();
+
+	cmd.reserve(1024 * 1024);
 
 }
 
@@ -44,7 +46,9 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 {
 	buffer.clear();
 
-	std::string cmd="";
+	cmd.clear();
+	cmd = "";
+
 	if (msg.type() == typeid(std::string))
 	{
 		cmd = boost::any_cast<std::string>(msg);
@@ -66,10 +70,12 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 		zdMarketBatchVector.push_back(std::move(temp));
 
 		int len = zdMarketBatchVector.size();
+
 		if (len >= marketBatchMaxSize
 			|| ( (len >1)&&( (zdMarketBatchVector[len-1].time- zdMarketBatchVector[0].time)> marketBatchMaxSecond) )
 			)
 		{
+		
 			cmd += zdMarketBatchStrHead;
 			auto it = zdMarketBatchVector.begin();
 			cmd += it->sqlStr;
@@ -80,20 +86,14 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			}
 			zdMarketBatchVector.clear();
 
-			if (len >= marketBatchMaxSize)
-			{
-				logger->error("¡Ÿ ±≤‚ ‘: batch len >= marketBatchMaxSize");
-			}
-			else
-			{
-				logger->error("¡Ÿ ±≤‚ ‘: batch time");
-			}
+
 		}		
 			
 	}
 	else if (msg.type() == typeid(CIT_DBMarketData))
 	{
 		CIT_DBMarketData cdd = boost::any_cast<CIT_DBMarketData>(msg);
+		
 		batchStrStruct temp;
 		temp.sqlStr=
 			"("
@@ -110,27 +110,19 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			|| ((len > 1) && ((citMarketBatchVector[len - 1].time - citMarketBatchVector[0].time) > marketBatchMaxSecond * 1000))
 			)
 		{
-			std::string tempStr = "";
+			cmd += citMarketBatchStrHead;
 			auto it = citMarketBatchVector.begin();
-			tempStr = tempStr + it->sqlStr;
+			cmd +=it->sqlStr;
 			it++;
 			for (; it != citMarketBatchVector.end(); it++)
 			{
-				tempStr = tempStr + "," + it->sqlStr;
+				cmd += ",";
+				cmd+= it->sqlStr;
 			}
 			citMarketBatchVector.clear();
-			cmd = citMarketBatchStrHead + tempStr;
-
-			if (len >= marketBatchMaxSize)
-			{
-				logger->error("¡Ÿ ±≤‚ ‘: batch len >= marketBatchMaxSize citMarketBatchStrHead");
-			}
-			else
-			{
-				logger->error("¡Ÿ ±≤‚ ‘: batch time citMarketBatchStrHead");
-			}
+			
 		}
-
+		
 	}
 	else if (msg.type() == typeid(T_TradeDetailsData))
 	{
@@ -193,6 +185,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 	if(buffer.capacity()< cmd.length())
 		buffer.resize(cmd.length());
 	sendSize = cmd.length();
+
 	memcpy(&buffer[0], cmd.c_str(), cmd.length());
 
 }

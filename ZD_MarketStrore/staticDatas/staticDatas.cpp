@@ -10,6 +10,7 @@ void StaticDatas::init()
 		logger->error("!connectDb in StaticDatas::readDbBaseData()");
 		return;
 	}
+	
 	readDbBaseData();
 }
 
@@ -162,6 +163,18 @@ bool StaticDatas::connectDb()
 	}
 	if (times <= 0)
 		return false;
+
+	Statement *state;
+	state = con->createStatement();
+	try
+	{
+		std::string cmd = "create database " + dbConfig.dbName;
+		state->execute(cmd);
+	}
+	catch (sql::SQLException &e)
+	{
+		logger->error("{}", e.what());
+	}
 
 	return true;
 }

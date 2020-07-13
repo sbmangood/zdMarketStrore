@@ -27,9 +27,10 @@ bool ZD_MarketManager::createEndPoint()
 	endPointMarket = std::shared_ptr<Endpoint>(new Endpoint());
 	endPointCII = std::shared_ptr<Endpoint>(new Endpoint());
 	MysqlConConfig mcc;
-	endPointFuture-> bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt1, mcc)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
-	endPointMarket->bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt2, mcc)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
-	endPointCII->bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt3, mcc)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
+	std::string dbName = ConfigManager::get_mutable_instance().mySqlConfig.dbName;
+	endPointFuture-> bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt1, mcc, dbName,2)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
+	endPointMarket->bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt2, mcc, dbName,6)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
+	endPointCII->bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt3, mcc, dbName,6)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
 
 
 
@@ -92,15 +93,7 @@ void ZD_MarketManager::createNewTables()
 
 	std::string cmd;
 	std::string dbName = ConfigManager::get_mutable_instance().mySqlConfig.dbName;
-	//创建数据库
-	cmd = "create database " + dbName;
-	endPointFuture->send_msg(boost::any(cmd));
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-	//切入指定数据库
-	cmd = "use " + dbName + ";";
-	endPointFuture->send_msg(boost::any(cmd));
-	endPointMarket->send_msg(boost::any(cmd));
-	endPointCII->send_msg(boost::any(cmd));
+
 	//表一
 	cmd = glInclude.ofLogin.createTable();
 	endPointFuture->send_msg(boost::any(cmd));

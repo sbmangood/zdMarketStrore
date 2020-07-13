@@ -125,10 +125,16 @@ void CIT_Market::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMark
 	zdd.price = std::to_string(pDepthMarketData->LastPrice);
 	std::string time = std::string(pDepthMarketData->UpdateTime);
 	dealTime(time);
-	logger->info("New  CIT marketData price {} ", zdd.price);
+	
 	if (cITMarketConfig.uniqueMarket== "true"
 		&&time<cITMarketConfig.endTime && time>cITMarketConfig.startTime)
 	{
+		static int tempInt = 0;
+		tempInt++;
+		if (tempInt > 1000)
+		{
+			logger->info("cii time uniqueMarket:{}", time);
+		}
 		return;
 	}
 	zdd.time = std::string(pDepthMarketData->TradingDay)+time ;

@@ -58,6 +58,7 @@ public:
 	//Ò»°ãº¯Êý
 public:
 	string GetDateTime();
+	bool juggePrice(const std::string &price);
 
 	void SubscStockBroker();
 

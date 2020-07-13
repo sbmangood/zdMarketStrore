@@ -110,7 +110,16 @@ string ZdMarket::GetDateTime()
 	return szBuffer;
 #endif
 }
-
+//price 字符串对应不是0.0
+bool ZdMarket::juggePrice(const std::string &price)
+{
+	for (auto it = price.begin(); it != price.end(); it++)
+	{
+		if ((*it) != '0' && (*it) != '.')
+			return true;
+	}
+	return false;
+}
 void ZdMarket::SubscStockBroker()
 {
 	CMarketReqBrokerDataField qry = {};
@@ -318,7 +327,7 @@ void ZdMarket::OnRspUserLogin(CMarketRspInfoField *pRspInfo, int iRequestID, boo
 	}
 	else {
 		logger->info("登录行情接口成功，可以订阅行情了....");
-		ld.msg = "Login ok!....";
+		ld.msg = "Market Login ok!....";
 		m_bIsLogin = true;
 	}
 	endPoint->send_msg(boost::any(ld));
@@ -382,7 +391,10 @@ void ZdMarket::OnRspMarketData(CMarketRspMarketDataField *pRspMarketData, CMarke
 		md.dueDate = StaticDatas::get_mutable_instance().getDueDayFromContractMap(md.contract);
 		md.time = pRspMarketData->Time;
 		md.price = pRspMarketData->CurrPrice;
-		endPoint->send_msg(boost::any(md));
+		if (juggePrice(md.price))
+		{
+			endPoint->send_msg(boost::any(md));
+		}		
 		
 	}
 	

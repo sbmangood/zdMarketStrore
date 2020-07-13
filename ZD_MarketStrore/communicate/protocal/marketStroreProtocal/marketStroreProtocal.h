@@ -32,4 +32,6 @@ private:
 	std::string zdMarketBatchStrHead;
 	std::string citMarketBatchStrHead;
 
+	std::string cmd;
+
 };
