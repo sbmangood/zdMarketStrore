@@ -122,23 +122,29 @@ void CIT_Market::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMark
 
 	CIT_DBMarketData zdd;
 	zdd.contract = pDepthMarketData->InstrumentID;
+
+
+	int vol = pDepthMarketData->Volume;
+
+	if (!findAndUpdateCIT_MarketMap(zdd.contract, vol))
+	{
+		return;
+	}
+
 	zdd.price = std::to_string(pDepthMarketData->LastPrice);
 	std::string time = std::string(pDepthMarketData->UpdateTime);
 	dealTime(time);
-	
+	zdd.getDataTime = m_g_getDateTime();
+
 	if (cITMarketConfig.uniqueMarket== "true"
 		&&time<cITMarketConfig.endTime && time>cITMarketConfig.startTime)
 	{
-		static int tempInt = 0;
-		tempInt++;
-		if (tempInt > 1000)
-		{
-			logger->info("cii time uniqueMarket:{}", time);
-		}
 		return;
 	}
-	zdd.time = std::string(pDepthMarketData->TradingDay)+time ;
+	zdd.time = std::string(pDepthMarketData->ActionDay)+time ;
 	
+	logger->info("Get new market data contract:{}", zdd.contract);
+
 	endPoint->send_msg(boost::any(zdd));
 
 }
@@ -146,4 +152,33 @@ void CIT_Market::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMark
 void CIT_Market::dealTime(std::string &time)
 {
 	time.erase(std::remove(time.begin(), time.end(), ':'), time.end());
+}
+
+bool CIT_Market::findAndUpdateCIT_MarketMap(const std::string &contract, int vol)
+{
+	auto it = CIT_MarketMap.find(contract);
+
+	if (it == CIT_MarketMap.end())
+	{
+		CIT_MarketMapValue value;
+		value.vol = vol;
+		value.contract = contract;
+		CIT_MarketMap.insert(std::make_pair(contract, value));
+		return true;
+	}
+	else
+	{
+		int oldVol = it->second.vol;
+		if (vol != oldVol)
+		{
+			it->second.vol = vol;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+
 }

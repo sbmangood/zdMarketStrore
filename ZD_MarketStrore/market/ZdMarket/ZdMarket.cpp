@@ -380,6 +380,15 @@ void ZdMarket::OnRspMarketData(CMarketRspMarketDataField *pRspMarketData, CMarke
 		logger->info ( "ErrorMsg = {}",  pRspInfo->ErrorMsg);
 	}
 	else {
+
+		std::string type = pRspMarketData->QuoteType;
+
+		if ( (type != "Z") && (type != "2") )
+		{
+			return;
+		}
+
+
 		ZD_DBMarketData md;
 		
 		//printf("%s TrCode=%-10s CurrPrice=%-10s CurrNumber=%-7s FilledNum=%-10s QuoteType=%s\r\n",
@@ -391,6 +400,10 @@ void ZdMarket::OnRspMarketData(CMarketRspMarketDataField *pRspMarketData, CMarke
 		md.dueDate = StaticDatas::get_mutable_instance().getDueDayFromContractMap(md.contract);
 		md.time = pRspMarketData->Time;
 		md.price = pRspMarketData->CurrPrice;
+		md.getDataTime = m_g_getDateTime();
+
+		logger->info("Get new market data contract:{}", md.contract);
+
 		if (juggePrice(md.price))
 		{
 			endPoint->send_msg(boost::any(md));

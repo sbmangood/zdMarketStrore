@@ -26,6 +26,16 @@
 
 #define safe_cpy(tar, src)	SafeStrcpy(tar, sizeof(tar), src);
 
+inline std::string m_g_getDateTime()
+{
+	time_t t;
+	time(&t);
+	char tmp[64];
+	strftime(tmp, sizeof(tmp), "%Y%m%d%H%M%S", localtime(&t));
+	return tmp;
+}
+
+
 inline void SafeStrcpy(char* tar, size_t tar_size, const char* src)
 {
 	size_t n = __min(strlen(src), tar_size - 1);

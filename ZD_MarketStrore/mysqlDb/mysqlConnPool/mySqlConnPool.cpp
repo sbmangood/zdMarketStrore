@@ -68,12 +68,12 @@ Connection* DBPool::CreateConnection()
 	}
 	catch (sql::SQLException& e)
 	{
-		perror("link error");
+		perror("mysql link error");
 		return NULL;
 	}
 	catch (std::runtime_error& e)
 	{
-		perror("run error");
+		perror("mysql run error");
 		return NULL;
 	}
 }
@@ -191,7 +191,7 @@ void mysqlConnPooltest()
 
 	std::vector< Connection *> vc;
 
-
+	
 
 	con = dbPool.GetConnection();	//get a db conn
 	if (con == nullptr)

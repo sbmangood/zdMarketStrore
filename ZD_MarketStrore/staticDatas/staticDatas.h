@@ -19,6 +19,8 @@ public:
 	ZD_outExProductSubTable				oSubTable;
 	ZD_inExProductSubTable				iSubTable;
 
+	const std::string					fileSubListPath = "./configs/marketConfig/fileSubList.json";
+
 public:
 	void init();
 
@@ -30,6 +32,7 @@ private:
 	bool readOutExProductSubList();
 	bool readInExProductSubList();
 	bool connectDb();
+	bool readProductSubListByFile();
 
 
 private:

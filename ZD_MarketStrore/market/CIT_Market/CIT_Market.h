@@ -5,6 +5,14 @@
 
 class CIT_Market:public CThostFtdcMdSpi
 {
+	//内盘主要通过行情的成交量是否变化来判断是否有成交 
+	struct CIT_MarketMapValue
+	{
+		std::string contract;
+		//成交量
+		int vol;
+	};
+
 public:
 	CIT_Market(CThostFtdcMdApi *pUserApi,const CIT_MarketConfig &cf);
 	CIT_Market() = delete;
@@ -43,7 +51,11 @@ private:
 	//登录数据
 	CThostFtdcReqUserLoginField gReqUserLogin;
 	CIT_MarketConfig			cITMarketConfig;
+
+	std::map<std::string, CIT_MarketMapValue>		CIT_MarketMap;
 	
 private:
 	void dealTime(std::string &time);
+	
+	bool findAndUpdateCIT_MarketMap(const std::string &contract, int vol);
 };

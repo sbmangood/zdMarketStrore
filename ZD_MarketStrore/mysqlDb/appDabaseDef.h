@@ -23,7 +23,7 @@ public:
 	}
 };
 
-//国外期货登陆记录表格
+//外盘期货登陆记录表格
 class OutFutureLoginTableStruct :public DB_TableStructStoreBase
 {
 public:
@@ -55,6 +55,7 @@ public:
 	const std::string constractNo = "sContractNo";
 	const std::string time = "sTime";
 	const std::string price = "nPrice";
+	const std::string getDataTime = "getDataTime";
 	std::string createTable()override
 	{
 		std::string  cmd = "create table if not exists "
@@ -63,6 +64,7 @@ public:
 			+ constractNo + " NVARCHAR(20), "
 			+ time + " DATETIME, "
 			+ price + " NUMERIC(15,6),"
+			+ getDataTime + " DATETIME, "
 			+ "insertTime timestamp NOT NULL default CURRENT_TIMESTAMP"
 			+ ")ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		return cmd;
@@ -79,7 +81,7 @@ public:
 	const std::string time = "sTime";
 	const std::string price = "nPrice";
 	const std::string exchange = "sExchangePlace";
-
+	const std::string getDataTime = "getDataTime";
 	std::string createTable() override
 	{
 		std::string  cmd = "create table if not exists "
@@ -90,6 +92,7 @@ public:
 			+ time + " DATETIME, "
 			+ price + " NUMERIC(15,6), "
 			+ exchange + " NVARCHAR(20),"
+			+ getDataTime + " DATETIME, "
 			+"insertTime timestamp NOT NULL default CURRENT_TIMESTAMP"
 			+ " )ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		return cmd;
@@ -114,6 +117,7 @@ public:
 	const std::string tradeTime = "sTradeTime";
 	const std::string openClose = "sOpenClose";
 
+
 	std::string createTable()override
 	{
 		std::string cmd = "create table if not exists "
@@ -132,6 +136,7 @@ public:
 			+ tradeDate + " DATE, "
 			+ tradeTime + " DATETIME, "
 			+ openClose + " NVARCHAR(10),"
+			
 			+"insertTime timestamp  NOT NULL default CURRENT_TIMESTAMP"
 			+ " )ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
@@ -200,6 +205,8 @@ struct ZD_DBMarketData
 	std::string time;
 	std::string price;
 	std::string exchange;
+	//从接口处获得数据的时间
+	std::string getDataTime;
 
 };
 
@@ -209,6 +216,9 @@ struct CIT_DBMarketData
 	std::string contract;
 	std::string time;
 	std::string price;
+
+	//从接口处获得数据的时间
+	std::string getDataTime;
 };
 //当天交易成交记录存数据库
 struct T_TradeDetailsData

@@ -12,12 +12,32 @@ void StaticDatas::init()
 	}
 	
 	readDbBaseData();
+	
 }
 
 bool StaticDatas::readDbBaseData()
 {
+
+	readProductSubListByFile();
+
 	if (readOutExProductSubList() && readInExProductSubList())
 	{
+		int cnt = 1;
+		
+		logger->info("外盘订阅品种列表: ");
+		for (auto it = outExProductSubList.begin(); it != outExProductSubList.end(); it++)
+		{
+			std::string subProduct = it->exchange + ":" + it->product;
+			logger->info("{0}->{1}", cnt++, subProduct);
+		}
+		logger->info("内盘订阅合约列表: ");
+		cnt = 1;
+		for (auto it = inExProductSubList.begin(); it != inExProductSubList.end(); it++)
+		{
+			std::string subProduct = it->product;
+			logger->info("{0}->{1}", cnt++, subProduct);
+		}
+	
 		return true;
 	}
 	else
@@ -57,8 +77,7 @@ bool StaticDatas::readOutExProductSubList()
 		return false;
 	}
 
-	logger->info("外盘订阅品种列表: ");
-	int cnt = 1;
+	
 	//输出查询
 	while (result->next())
 	{
@@ -72,7 +91,7 @@ bool StaticDatas::readOutExProductSubList()
 			subS.exchange = subProduct.substr(0, find);
 			subS.product = subProduct.substr(find + 1);
 			outExProductSubList.push_back(std::move(subS));
-			logger->info("{0}->{1}", cnt++, subProduct);
+			
 
 		}
 		catch (sql::SQLException &e) {
@@ -116,8 +135,8 @@ bool StaticDatas::readInExProductSubList()
 		return false;
 	}
 
-	logger->info("内盘订阅合约列表: ");
-	int cnt = 1;
+	
+	
 	//输出查询
 	while (result->next())
 	{
@@ -129,7 +148,7 @@ bool StaticDatas::readInExProductSubList()
 	
 			subS.product = subProduct;
 			inExProductSubList.push_back(std::move(subS));
-			logger->info("{0}->{1}", cnt++, subProduct);
+			
 
 		}
 		catch (sql::SQLException &e) {
@@ -202,5 +221,51 @@ std::string StaticDatas::getDueDayFromContractMap(const std::string &contract)
 	else
 	{
 		return contractMap[contract].dueDate;
+	}
+}
+bool StaticDatas::readProductSubListByFile()
+{
+	try
+	{
+		boost::property_tree::ptree	tree;
+		boost::property_tree::json_parser::read_json(fileSubListPath, tree);
+		boost::property_tree::ptree		citMarketListTree = tree.get_child("citMarketList");
+
+		
+		for (auto it = citMarketListTree.begin(); it != citMarketListTree.end(); it++)
+		{
+			std::string subProduct = it->second.get_value<std::string>();
+
+			inExProductSubStruct subS;
+			subS.product = subProduct;
+			inExProductSubList.push_back(std::move(subS));
+
+		}
+
+		boost::property_tree::ptree		zdMarketListTree = tree.get_child("zdMarketList");
+
+
+		for (auto it = zdMarketListTree.begin(); it != zdMarketListTree.end(); it++)
+		{
+			std::string subProduct = it->second.get_value<std::string>();
+			size_t find = subProduct.find(":");
+			if (find == std::string::npos)
+				break;
+			outExProductSubStruct subS;
+			subS.exchange = subProduct.substr(0, find);
+			subS.product = subProduct.substr(find + 1);
+			outExProductSubList.push_back(std::move(subS));			
+		}
+
+
+		return true;
+	}
+	catch (boost::property_tree::ptree_error&e)
+	{
+
+
+		logger->error("readProductSubListByFile() paser config exception:{}", e.what());
+
+		return false;
 	}
 }

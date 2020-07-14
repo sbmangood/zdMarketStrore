@@ -96,7 +96,7 @@ void ZD_Future::OnFrontDisconnected(int iReason)
 }
 void ZD_Future::OnHeartBeatWarning(int iTimeLapse)
 {
-	logger->info("ÐÄÌø:{}", iTimeLapse);
+	//logger->info("ÐÄÌø:{}", iTimeLapse);
 }
 
 void ZD_Future::OnRtnTrade(CFutureRtnTradeField *pRtnTrade, CFutureRspInfoField *pRspInfo, int iRequestID, bool bIsLast)

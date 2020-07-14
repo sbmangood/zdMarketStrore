@@ -11,7 +11,8 @@ MarketStoreProtocal::MarketStoreProtocal()
 		+ globalInclude.topts.dueDate + ","
 		+ globalInclude.topts.time + ","
 		+ globalInclude.topts.price + ","
-		+ globalInclude.topts.exchange
+		+ globalInclude.topts.exchange+","
+		+ globalInclude.topts.getDataTime
 		+ ") "
 		+ "VALUES ";
 
@@ -20,9 +21,9 @@ MarketStoreProtocal::MarketStoreProtocal()
 		+ "("
 		+ globalInclude.tipts.constractNo + ","
 		+ globalInclude.tipts.time + ","
-		+ globalInclude.tipts.price
+		+ globalInclude.tipts.price+","
+		+ globalInclude.tipts.getDataTime
 		+ ") "
-
 		+ "VALUES ";
 	marketBatchMaxSize = ConfigManager::get_mutable_instance().mySqlConfig.batchNum;
 	marketBatchMaxSecond = ConfigManager::get_mutable_instance().mySqlConfig.batchTime;
@@ -38,7 +39,7 @@ MarketStoreProtocal::MarketStoreProtocal()
 void MarketStoreProtocal::decode_data(const unsigned char* data, unsigned int length)
 {
 	char *da = (char *)malloc(length);
-	memcpy(da, data, length);
+	::memcpy(da, data, length);
 	std::string str = std::string(da, length);
 	this->dispatchMessage(IProtocol::EVENT_MSG_ARRIVED, boost::any(str));
 }
@@ -64,7 +65,8 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			+ toDbString(zmd.dueDate) + ","
 			+ toDbString(zmd.time) + ","
 			+ toDbNum(zmd.price) + ","
-			+ toDbString(zmd.exchange)
+			+ toDbString(zmd.exchange)+","
+			+ toDbString(zmd.getDataTime)
 			+ ")";
 		temp.time = time(NULL);
 		zdMarketBatchVector.push_back(std::move(temp));
@@ -99,7 +101,8 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			"("
 			+ toDbString(cdd.contract) + ","
 			+ toDbString(cdd.time) + ","
-			+ toDbString(cdd.price)
+			+ toDbString(cdd.price)+","
+			+ toDbString(cdd.getDataTime)
 			+ ")";
 
 		temp.time = time(NULL);
@@ -107,7 +110,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 
 		int len = citMarketBatchVector.size();
 		if (len >= marketBatchMaxSize
-			|| ((len > 1) && ((citMarketBatchVector[len - 1].time - citMarketBatchVector[0].time) > marketBatchMaxSecond * 1000))
+			|| ((len > 1) && ((citMarketBatchVector[len - 1].time - citMarketBatchVector[0].time) > marketBatchMaxSecond ))
 			)
 		{
 			cmd += citMarketBatchStrHead;
@@ -186,7 +189,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 		buffer.resize(cmd.length());
 	sendSize = cmd.length();
 
-	memcpy(&buffer[0], cmd.c_str(), cmd.length());
+	::memcpy(&buffer[0], cmd.c_str(), cmd.length());
 
 }
 void MarketStoreProtocal::reset()
