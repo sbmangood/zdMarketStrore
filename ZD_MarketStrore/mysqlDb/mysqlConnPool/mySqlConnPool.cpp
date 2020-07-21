@@ -20,6 +20,7 @@ void DBPool::initPool(std::string url_, std::string user_, std::string password_
 	this->url = url_;
 	this->maxSize = maxSize_;
 	this->curSize = 0;
+	heartBeatWork = true;
 
 	try {
 		this->driver = sql::mysql::get_driver_instance();
@@ -33,6 +34,95 @@ void DBPool::initPool(std::string url_, std::string user_, std::string password_
 		perror("Run error");
 	}
 	this->InitConnection(maxSize / 2);
+	createDbTalbe();
+}
+
+void DBPool::heartBeatThread()
+{
+	while (heartBeatWork)
+	{
+		std::cout << "Heart beat in DBPool::heartBeatThread()\n";
+
+		{
+			std::lock_guard<std::mutex> lk(m_mutex);
+
+			for (auto it = connList.begin(); it != connList.end(); it++)
+			{
+				Statement *state = nullptr;
+				ResultSet *result=nullptr;
+				Connection* conn = (*it);
+			
+				try {
+					
+					state = conn->createStatement();
+					std::string cmd = "use " + heartBeatDb;
+					state->execute(cmd);
+					cmd = "select COUNT(*) from "
+						+heartBeatTalble;
+
+					result = state->executeQuery(cmd);
+
+
+				}
+				catch (sql::SQLException &e) {
+					std::cout << "heartBeatThread error :" << e.what() << std::endl;
+				}
+
+				if (result != nullptr)
+					delete result;
+				if (state != nullptr)
+					delete state;
+				
+			}
+		}
+		
+		std::this_thread::sleep_for(chrono::seconds(heartBeatTime));
+	}
+}
+
+void DBPool::createDbTalbe()
+{
+	if (curSize <= 0)
+	{
+		perror("DBPool::createDbTalbe() curSize <= 0 error");
+		return;
+	}
+	Connection* conn = GetConnection();
+	
+	if ((conn != NULL) && (!conn->isClosed()))
+	{
+		Statement *state = nullptr;
+		ResultSet *result = nullptr;
+		
+		try {
+			state = conn->createStatement();
+			std::string cmd = "create database " + heartBeatDb;
+			state->execute(cmd);
+			cmd = "use " + heartBeatDb;
+			state->execute(cmd);
+			cmd = "create table " + heartBeatTalble + " "
+				+ "("
+				"heartBeat INT"
+				+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8 ";
+
+			state->execute(cmd);
+
+
+		}
+		catch (sql::SQLException &e) {			
+			
+		}
+
+		if(result!=nullptr)
+			delete result;
+		if (state != nullptr)
+			delete state;
+		ReleaseConnection(conn);
+	}
+	else
+	{
+		perror("DBPool::createDbTalbe() error");
+	}
 }
 
 //init conn pool
@@ -139,8 +229,12 @@ void DBPool::ReleaseConnection(Connection *conn)
 	}
 }
 
+
+
 void DBPool::DestoryConnPool()
 {
+	heartBeatWork = false;
+
 	list<Connection*>::iterator iter;
 	std::lock_guard<std::mutex> lk(m_mutex);
 	for (iter = connList.begin(); iter != connList.end(); ++iter)

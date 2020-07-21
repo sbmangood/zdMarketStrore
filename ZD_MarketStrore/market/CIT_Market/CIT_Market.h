@@ -58,4 +58,6 @@ private:
 	void dealTime(std::string &time);
 	
 	bool findAndUpdateCIT_MarketMap(const std::string &contract, int vol);
+
+	bool judgeMarketTime(const std::string &time);
 };

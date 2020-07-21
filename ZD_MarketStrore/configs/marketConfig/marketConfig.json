@@ -20,7 +20,7 @@
 		"passwd"			:	"123456",
 
 		"uniqueMarket"		:	"true",
-		"startTime"			:	"083000",
-		"endTime"			:	"093000"
+		"startTime"			:	["073000","140000"],
+		"endTime"			:	["090000","210000"]
 	}
 }

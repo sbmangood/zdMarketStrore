@@ -81,6 +81,9 @@ void CIT_Market::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
 		delete[]Instrumnet;
 
 		logger->info("Subscribe {} contracts for market data", subList.size());
+		DB_LoginData ld;
+		ld.msg = "CIT market longin ok!";
+		endPoint->send_msg(boost::any(ld));
 
 	}
 
@@ -136,18 +139,28 @@ void CIT_Market::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMark
 	dealTime(time);
 	zdd.getDataTime = m_g_getDateTime();
 
-	if (cITMarketConfig.uniqueMarket== "true"
-		&&time<cITMarketConfig.endTime && time>cITMarketConfig.startTime)
+	bool temf = judgeMarketTime(zdd.getDataTime.substr(8));
+
+	if ( (!temf) && (cITMarketConfig.uniqueMarket != "false"))
 	{
+	
 		return;
 	}
-	zdd.time = std::string(pDepthMarketData->ActionDay)+time ;
+
+
+	std::string date = std::string(pDepthMarketData->ActionDay);
+	std::string today = m_g_getDate();
+	if (date > today)
+		date = std::move(today);
+
+	zdd.time = date +time ;
 	
 	logger->info("Get new market data contract:{}", zdd.contract);
 
 	endPoint->send_msg(boost::any(zdd));
 
 }
+
 
 void CIT_Market::dealTime(std::string &time)
 {
@@ -181,4 +194,27 @@ bool CIT_Market::findAndUpdateCIT_MarketMap(const std::string &contract, int vol
 
 	}
 
+}
+
+bool CIT_Market::judgeMarketTime(const std::string &time)
+{
+
+	
+	int len;
+	const std::vector<std::string> &startVc = cITMarketConfig.startTimeVc;
+	const std::vector<std::string> &endVc = cITMarketConfig.endTimeVc;
+
+	len = (startVc.size() > endVc.size()) ?  endVc.size() : startVc.size();
+	bool flag = true;
+
+	for (int i = 0; i < len; i++)
+	{
+		if (time >= startVc[i] && time <= endVc[i])
+		{
+			flag = false;
+			break;
+		}
+	}
+
+	return flag;
 }

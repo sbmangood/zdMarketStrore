@@ -37,6 +37,9 @@ public:
 	//put the conn back to pool
 	void ReleaseConnection(Connection *conn);
 
+	//create a db and table for heartBeat
+	void heartBeatThread();
+
 	~DBPool();
 
 private:
@@ -54,6 +57,8 @@ private:
 	//destory db pool
 	void DestoryConnPool();
 
+	//create  db and table for hertbeat
+	void createDbTalbe();
 private:
 	string user;
 	string password;
@@ -66,6 +71,12 @@ private:
 
 	//thread lock mutex
 	static std::mutex			m_mutex;
+
+	//heartBeat
+	const std::string heartBeatDb = "heartBeatDb";
+	const std::string heartBeatTalble = "heartBeatTalble";
+	const int heartBeatTime = (60);	//second
+	bool heartBeatWork;
 };
 
 void mysqlConnPooltest();

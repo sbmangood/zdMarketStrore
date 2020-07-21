@@ -40,6 +40,10 @@ bool MysqlChannel::start()
 	}
 	if (times <= 0)
 		return false;
+
+	std::thread th(&DBPool::heartBeatThread, dbPool);
+	th.detach();
+
 	return true;
 }
 
@@ -113,6 +117,11 @@ void MysqlChannel::InsertDB_Task::work()
 	if (con == nullptr)
 	{
 		logger->error("con==nullptr in  MysqlChannel::InsertDB_Task::work()");
+		return;
+	}
+	if (con->isClosed())
+	{
+		logger->error("con->isClosed() in  MysqlChannel::InsertDB_Task::work()");
 		return;
 	}
 

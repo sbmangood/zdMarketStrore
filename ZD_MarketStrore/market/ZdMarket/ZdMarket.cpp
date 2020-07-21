@@ -307,7 +307,7 @@ void ZdMarket::OnFrontConnected()
 void ZdMarket::OnFrontDisconnected(int iReason)
 {
 	m_bIsLogin = false;
-	logger->info ("连接断开, 原因 = {}.", iReason);
+	logger->error ("连接断开, 原因 = {}.", iReason);
 }
 void ZdMarket::OnHeartBeatWarning(int iTimeLapse)
 {
@@ -327,7 +327,7 @@ void ZdMarket::OnRspUserLogin(CMarketRspInfoField *pRspInfo, int iRequestID, boo
 	}
 	else {
 		logger->info("登录行情接口成功，可以订阅行情了....");
-		ld.msg = "Market Login ok!....";
+		ld.msg = "API market Login ok!....";
 		m_bIsLogin = true;
 	}
 	endPoint->send_msg(boost::any(ld));

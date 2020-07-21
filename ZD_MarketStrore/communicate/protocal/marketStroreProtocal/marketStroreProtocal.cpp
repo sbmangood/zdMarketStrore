@@ -74,7 +74,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 		int len = zdMarketBatchVector.size();
 
 		if (len >= marketBatchMaxSize
-			|| ( (len >1)&&( (zdMarketBatchVector[len-1].time- zdMarketBatchVector[0].time)> marketBatchMaxSecond) )
+			|| ( (len >1)&&( (zdMarketBatchVector[len-1].time- zdMarketBatchVector[0].time)>= marketBatchMaxSecond) )
 			)
 		{
 		
@@ -110,7 +110,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 
 		int len = citMarketBatchVector.size();
 		if (len >= marketBatchMaxSize
-			|| ((len > 1) && ((citMarketBatchVector[len - 1].time - citMarketBatchVector[0].time) > marketBatchMaxSecond ))
+			|| ((len > 1) && ((citMarketBatchVector[len - 1].time - citMarketBatchVector[0].time) >= marketBatchMaxSecond ))
 			)
 		{
 			cmd += citMarketBatchStrHead;

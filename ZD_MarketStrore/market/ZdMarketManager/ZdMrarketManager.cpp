@@ -29,8 +29,8 @@ bool ZD_MarketManager::createEndPoint()
 	MysqlConConfig mcc;
 	std::string dbName = ConfigManager::get_mutable_instance().mySqlConfig.dbName;
 	endPointFuture-> bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt1, mcc, dbName,2)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
-	endPointMarket->bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt2, mcc, dbName,6)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
-	endPointCII->bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt3, mcc, dbName,6)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
+	endPointMarket->bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt2, mcc, dbName,12)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
+	endPointCII->bind(boost::shared_ptr<MysqlChannel>(new MysqlChannel(pt3, mcc, dbName,12)), boost::bind(&ZD_MarketManager::noUseMessageRecive, this, _1, _2));
 
 
 

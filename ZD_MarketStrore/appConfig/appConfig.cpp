@@ -84,8 +84,27 @@ bool ConfigManager::getCITMarketConfig()
 		cITMarketConfig.passwd = cITMarketTree.get<std::string>("passwd");
 
 		cITMarketConfig.uniqueMarket = cITMarketTree.get<std::string>("uniqueMarket");
-		cITMarketConfig.startTime = cITMarketTree.get<std::string>("startTime");
-		cITMarketConfig.endTime = cITMarketTree.get<std::string>("endTime");
+
+		boost::property_tree::ptree		startTimeTree = cITMarketTree.get_child("startTime");
+		boost::property_tree::ptree		endTimeTree = cITMarketTree.get_child("endTime");
+		cITMarketConfig.startTimeVc.clear();
+		cITMarketConfig.endTimeVc.clear();
+		for (auto it = startTimeTree.begin(); it != startTimeTree.end(); it++)
+		{
+			cITMarketConfig.startTimeVc.push_back(it->second.get_value<std::string>());			
+		}
+		for (auto it = endTimeTree.begin(); it != endTimeTree.end(); it++)
+		{
+			cITMarketConfig.endTimeVc.push_back(it->second.get_value<std::string>());
+		}
+
+		if (cITMarketConfig.endTimeVc.size() != cITMarketConfig.startTimeVc.size())
+		{
+			logger->error("cITMarketConfig.endTimeVc.size() != cITMarketConfig.startTimeVc.size()");
+		}
+		
+		//cITMarketConfig.startTime = cITMarketTree.get<std::string>("startTime");
+		//cITMarketConfig.endTime = cITMarketTree.get<std::string>("endTime");
 
 		return true;
 	}

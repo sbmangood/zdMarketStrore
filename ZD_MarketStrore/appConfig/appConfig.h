@@ -52,13 +52,15 @@ struct CIT_MarketConfig
 	std::string userID;
 	std::string passwd;
 
-	//因为CIT接口早上9点左右会重复发送昨晚的行情,所以程序后面会判断不存储
-	//uniqueMarket="true"去重,其他的不去重
+	//因为CIT接口早上7:40点左右会重复发送昨晚的行情,所以程序后面会判断不存储
+	//另外下午16:09-21:00之间也会发生重复数据
+	//uniqueMarket!="false"不去重,其他的去重
 	//startTime-endTime 之内数据粗略的不重复发送 
 	//格式:比如 083000-093000 
 	std::string uniqueMarket;
-	std::string startTime;
-	std::string endTime;
+	
+	std::vector<std::string>	startTimeVc;
+	std::vector<std::string>	endTimeVc;
 	//to do
 };
 

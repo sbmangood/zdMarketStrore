@@ -35,6 +35,14 @@ inline std::string m_g_getDateTime()
 	return tmp;
 }
 
+inline std::string m_g_getDate()
+{
+	time_t t;
+	time(&t);
+	char tmp[64];
+	strftime(tmp, sizeof(tmp), "%Y%m%d", localtime(&t));
+	return tmp;
+}
 
 inline void SafeStrcpy(char* tar, size_t tar_size, const char* src)
 {

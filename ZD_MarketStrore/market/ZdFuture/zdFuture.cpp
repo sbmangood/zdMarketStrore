@@ -92,7 +92,8 @@ void ZD_Future::OnFrontConnected()
 void ZD_Future::OnFrontDisconnected(int iReason)
 {
 	m_bIsLogin = false;
-	logger->info("期货交易服务器连接断开, 原因= {}", iReason);	
+	logger->error("期货交易服务器连接断开, 原因= {}", iReason);	
+
 }
 void ZD_Future::OnHeartBeatWarning(int iTimeLapse)
 {
