@@ -51,7 +51,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -124,16 +124,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./;./include;./thirdLib/includes;./mysqlDb/include/jdbc;D:\HuPingAn180801\work\mywork\third_lib\TraderServer\Boost\include\boost-1_63;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;./include;./thirdLib/x86/includes;./mysqlDb/include/jdbc;D:\HuPingAn180801\work\mywork\third_lib\TraderServer\Boost\include\boost-1_63;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>./thirdLib/libs/CIT/libs;./thirdLib/libs/ZdApi/libs;./thirdLib/libs/spdlog/libs;./mysqlDb/lib/win32/vs14;D:\HuPingAn180801\work\mywork\third_lib\TraderServer\Boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcrypto.lib;libssl.lib;mysqlcppconn.lib;mysqlcppconn8.lib;mysqlcppconn8-static.lib;thostmduserapi_se.lib;thosttraderapi_se.lib;DAApi.lib;mysqlcppconn-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./thirdLib/x86/libs/CIT/libs;./thirdLib/x86/libs/ZdApi/libs;./thirdLib/x86/libs/spdlog/libs;./mysqlDb/lib/win32/vs14;D:\HuPingAn180801\work\mywork\third_lib\TraderServer\Boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;mysqlcppconn.lib;mysqlcppconn8.lib;mysqlcppconn8-static.lib;thostmduserapi_se.lib;thosttraderapi_se.lib;DAApi.lib;mysqlcppconn-static.lib;fmt.lib;spdlog.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,12 +148,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>./;./include;./thirdLib/x64/includes;./mysqlDb/include/jdbc;D:\HuPingAn180801\work\mywork\third_lib\TraderServer\Boost64\include\boost-1_67;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>libcrypto.lib;libssl.lib;mysqlcppconn.lib;mysqlcppconn8.lib;mysqlcppconn8-static.lib;thostmduserapi_se.lib;thosttraderapi_se.lib;DAApi.lib;mysqlcppconn-static.lib;fmt.lib;spdlog.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./thirdLib/x64/libs/CIT/libs;./thirdLib/x64/libs/ZdApi/libs;./thirdLib/x64/libs/spdlog/libs;./mysqlDb/lib/win64/vs14;D:\HuPingAn180801\work\mywork\third_lib\TraderServer\Boost64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
