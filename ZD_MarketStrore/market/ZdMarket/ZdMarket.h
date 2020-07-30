@@ -24,6 +24,7 @@ private:
 	ZDMarketConfig		m_appConfig;			// 配置文件
 	CMarketApi*			m_pMarketApi;			// 行情接口
 
+	std::mutex						*endPointLock;
 	std::shared_ptr<Endpoint>		endPoint;
 	bool							hasEndPoint;
 
@@ -42,6 +43,7 @@ public:
 public:
 
 	bool setEndPoint(std::shared_ptr<Endpoint> ep);
+	bool setMutex(std::mutex *mut);
 	bool Create();
 
 	void Destroy();

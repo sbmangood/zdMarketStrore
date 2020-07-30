@@ -164,6 +164,8 @@ bool ZD_Future::setEndPoint(std::shared_ptr<Endpoint> ep)
 }
 
 
+
+
 void ZD_Future::QryInstrument()
 {
 	

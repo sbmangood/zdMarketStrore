@@ -18,6 +18,17 @@ bool CIT_Market::setEndPoint(std::shared_ptr<Endpoint> ep)
 	return hasEndPoint;
 }
 
+bool CIT_Market::setMutex(std::mutex *mut)
+{
+	if (mut == nullptr)
+	{
+		logger->error("mut == nullptr in CIT_Market::setMutex");
+		exit(1);
+	}
+	endPointLock = mut;
+	return true;
+}
+
 void CIT_Market::OnFrontConnected()
 {
 	logger->info("CII 连接 成功!");
@@ -157,6 +168,7 @@ void CIT_Market::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMark
 	
 	logger->info("Get new market data contract:{}", zdd.contract);
 
+	std::lock_guard<std::mutex> lock(*endPointLock);
 	endPoint->send_msg(boost::any(zdd));
 
 }

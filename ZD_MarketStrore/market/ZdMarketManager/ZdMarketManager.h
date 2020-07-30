@@ -8,6 +8,9 @@
 #include "communicate/mysqlChannel/mysqlChanel.h"
 #include "market/CIT_Market/CIT_Market.h"
 
+static bool batchWork = true;
+void batchLoopThread(std::vector<std::shared_ptr<Endpoint>> vc);
+
 class ZD_MarketManager:public boost::serialization::singleton<ZD_MarketManager>
 {
 public:
@@ -18,7 +21,10 @@ public:
 
 private:
 	std::shared_ptr<Endpoint>	endPointFuture;
+
+	std::mutex					*EndPointMarketLock;
 	std::shared_ptr<Endpoint>	endPointMarket;
+	std::mutex					*EndPointCIILock;
 	std::shared_ptr<Endpoint>	endPointCII;
 
 	GlobalInclude				glInclude;

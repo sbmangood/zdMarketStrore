@@ -4,6 +4,8 @@ static LOGGER logger = LoggerUtils::get_mutable_instance().getLogger("ZdMarketMa
 
 void ZD_MarketManager::start()
 {
+	EndPointMarketLock = new std::mutex();
+	EndPointCIILock = new std::mutex();
 	cITMarketConfig = ConfigManager::get_mutable_instance().cITMarketConfig;
 
 	if (!createEndPoint())
@@ -12,12 +14,23 @@ void ZD_MarketManager::start()
 	createNewTables();
 	createZD_Market();
 	createCIT_Market();
+
+	std::this_thread::sleep_for(chrono::milliseconds(100));
+	std::vector<std::shared_ptr<Endpoint>> vc;
+	vc.push_back(endPointMarket);
+	vc.push_back(endPointCII);
+
+	std::thread thr(batchLoopThread, vc);
+	thr.detach();
+
 }
 
 void ZD_MarketManager::stop()
 {
 
 }
+
+
 bool ZD_MarketManager::createEndPoint()
 {
 	boost::shared_ptr<MarketStoreProtocal> pt1 = boost::make_shared<MarketStoreProtocal>();
@@ -47,10 +60,12 @@ bool ZD_MarketManager::createZD_Market()
 	zdMarket = std::shared_ptr<ZdMarket>(new ZdMarket());
 	zdFuture->setEndPoint(endPointFuture);
 	zdMarket->setEndPoint(endPointMarket);
+	zdMarket->setMutex(EndPointMarketLock);
+
 
 	if (zdFuture->IsCreate()) {
 		logger->info("{}", (zdFuture->IsLogin() ? "api 交易连接成功" : "api 交易连接失败"));
-		return false;
+		
 	}
 	else {
 		zdFuture->Create();
@@ -58,7 +73,7 @@ bool ZD_MarketManager::createZD_Market()
 
 	if (zdMarket->IsCreate()) {
 		logger->info("{}", (zdMarket->IsLogin() ? "api 行情连接成功" : "api 行情连接失败"));
-		return false;
+		
 	}
 	else {
 		zdMarket->Create();
@@ -73,6 +88,7 @@ bool ZD_MarketManager::createCIT_Market()
 		pUserApi = CThostFtdcMdApi::CreateFtdcMdApi();
 		citMarket = std::shared_ptr<CIT_Market>(new CIT_Market(pUserApi, cITMarketConfig));
 		citMarket->setEndPoint(endPointCII);
+		citMarket->setMutex(EndPointCIILock);
 		// 注册一事件处理的实例
 		pUserApi->RegisterSpi(citMarket.get());
 		// 设置交易托管系统服务的地址，可以注册多个地址备用
@@ -84,6 +100,7 @@ bool ZD_MarketManager::createCIT_Market()
 	catch (...)
 	{
 		logger->error("catch unkown err in createCIT_Market()");
+		return false;
 	}
 
 	return true;
@@ -114,3 +131,18 @@ void ZD_MarketManager::createNewTables()
 	endPointFuture->send_msg(boost::any(cmd));
 }
 
+void batchLoopThread(std::vector<std::shared_ptr<Endpoint>> vc)
+{
+	DB_BatchLoopData bld;
+
+	while (batchWork)
+	{
+		std::this_thread::sleep_for(chrono::seconds(5));
+		for (auto ep : vc)
+		{
+			ep->send_msg(bld);
+		}
+
+		logger->info("临时测试!");
+	}
+}

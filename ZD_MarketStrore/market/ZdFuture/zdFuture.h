@@ -39,6 +39,7 @@ public:
 	bool IsCreate();
 
 	bool setEndPoint(std::shared_ptr<Endpoint> ep);
+	bool setMutex(std::mutex *mut);
 //连接函数
 	void ReqUserLogin();
 //查询请求函数

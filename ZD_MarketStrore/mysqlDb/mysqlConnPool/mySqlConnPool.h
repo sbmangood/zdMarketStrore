@@ -75,7 +75,7 @@ private:
 	//heartBeat
 	const std::string heartBeatDb = "heartBeatDb";
 	const std::string heartBeatTalble = "heartBeatTalble";
-	const int heartBeatTime = (60);	//second
+	const int heartBeatTime = (60*30);	//second
 	bool heartBeatWork;
 };
 

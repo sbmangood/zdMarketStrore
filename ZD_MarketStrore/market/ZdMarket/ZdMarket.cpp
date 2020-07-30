@@ -12,7 +12,16 @@ bool ZdMarket::setEndPoint(std::shared_ptr<Endpoint> ep)
 	return hasEndPoint;
 }
 
-
+bool ZdMarket::setMutex(std::mutex *mut)
+{
+	if (mut == nullptr)
+	{
+		logger->error("mut == nullptr in ZdMarket::setMutex");
+		exit(1);
+	}
+	endPointLock = mut;
+	return true;
+}
 bool ZdMarket::Create()
 {
 
@@ -406,6 +415,7 @@ void ZdMarket::OnRspMarketData(CMarketRspMarketDataField *pRspMarketData, CMarke
 
 		if (juggePrice(md.price))
 		{
+			std::lock_guard<std::mutex> lock(*endPointLock);
 			endPoint->send_msg(boost::any(md));
 		}		
 		

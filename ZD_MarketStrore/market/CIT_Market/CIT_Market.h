@@ -19,7 +19,7 @@ public:
 	~CIT_Market() {}
 
 	bool setEndPoint(std::shared_ptr<Endpoint> ep);
-
+	bool setMutex(std::mutex *mut);
 
 	// 当客户端与交易托管系统通信连接断开时，该方法被调用
 	virtual void OnFrontConnected()override;
@@ -39,6 +39,7 @@ public:
 	virtual void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)override;
 
 private:
+	std::mutex									*endPointLock;
 	std::shared_ptr<Endpoint>					endPoint;
 	bool										hasEndPoint;
 
