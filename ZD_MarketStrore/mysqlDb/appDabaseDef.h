@@ -51,20 +51,22 @@ class T_InnPricesTableStruct : public DB_TableStructStoreBase
 {
 public:
 	const std::string tableName = "T_InnPrices";
+
 	const std::string constractNo = "sContractNo";
 	const std::string time = "sTime";
 	const std::string price = "nPrice";
+
 	const std::string getDataTime = "getDataTime";
 	std::string createTable()override
 	{
 		std::string  cmd = "create table if not exists "
 			+ tableName
 			+ "( "
-			+ constractNo + " NVARCHAR(20), "
+
+			+ constractNo + " NVARCHAR(12), "
 			+ time + " DATETIME, "
-			+ price + " NUMERIC(15,6),"
-			+ getDataTime + " DATETIME, "
-			+ "insertTime timestamp NOT NULL default CURRENT_TIMESTAMP"
+			+ price + " NUMERIC(15,6)"
+						
 			+ ")ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		return cmd;
 	}
@@ -75,24 +77,26 @@ class T_OutPricesTableStruct :public DB_TableStructStoreBase
 {
 public:
 	const std::string tableName = "T_OutPrices";
+
 	const std::string contract = "sContractNo";
 	const std::string dueDate = "dDueDate";
 	const std::string time = "sTime";
 	const std::string price = "nPrice";
 	const std::string exchange = "sExchangePlace";
+
 	const std::string getDataTime = "getDataTime";
 	std::string createTable() override
 	{
 		std::string  cmd = "create table if not exists "
 			+ tableName
 			+ "( "
-			+ contract + " NVARCHAR(20), "
+
+			+ contract + " NVARCHAR(12), "
 			+ dueDate + " DATE, "
 			+ time + " DATETIME, "
 			+ price + " NUMERIC(15,6), "
-			+ exchange + " NVARCHAR(20),"
-			+ getDataTime + " DATETIME, "
-			+"insertTime timestamp NOT NULL default CURRENT_TIMESTAMP"
+			+ exchange + " NVARCHAR(10)"
+	
 			+ " )ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		return cmd;
 	}
@@ -134,9 +138,8 @@ public:
 			+ charge + " NUMERIC(10,2), "
 			+ tradeDate + " DATE, "
 			+ tradeTime + " DATETIME, "
-			+ openClose + " NVARCHAR(10),"
-			
-			+"insertTime timestamp  NOT NULL default CURRENT_TIMESTAMP"
+			+ openClose + " NVARCHAR(10)"
+						
 			+ " )ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 		return cmd;

@@ -23,7 +23,8 @@ struct ZDMarketConfig
 	std::string	macAddress;
 	std::string	computerName;
 	std::string	softwareName;
-	std::string	serverAddress;
+	std::string	serverAddress;		//行情ip和端口
+	std::string tradeServerAddress;	//交易ip和端口
 	std::string	softwareVersion;
 
 

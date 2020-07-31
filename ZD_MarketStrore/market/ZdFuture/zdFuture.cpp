@@ -21,7 +21,7 @@ bool ZD_Future::Create()
 
 
 		char addr[MAX_PATH];
-		snprintf(addr, MAX_PATH, "tcp://%s", m_appConfig.serverAddress.c_str());
+		snprintf(addr, MAX_PATH, "tcp://%s", m_appConfig.tradeServerAddress.c_str());
 
 		LONG beat = atol(m_appConfig.heartBeat.c_str());
 
@@ -30,7 +30,7 @@ bool ZD_Future::Create()
 		m_pFutureApi->SetHeartBeatTimeout(beat);
 		m_pFutureApi->Init();
 		logger->info("开始连接期货交易服务器....");
-		
+		logger->info("Trade Server addr : {}", addr);
 		return true;
 	}
 	else {
@@ -141,7 +141,7 @@ void ZD_Future::OnRspUserLogin(CFutureRspInfoField *pRspInfo, int iRequestID, bo
 	if (pRspInfo->ErrorID) {
 		logger->error("登录期货交易服务器失败.");
 		m_bIsLogin = false;
-		dld.msg = "API future login err.";
+		dld.msg = "API future login err. result: "+ std::to_string(pRspInfo->ErrorID);
 	}
 	else {
 		logger->info("登录期货交易服务器成功.");

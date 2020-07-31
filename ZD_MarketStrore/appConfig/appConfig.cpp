@@ -58,7 +58,7 @@ bool ConfigManager::getZDMarketConfig()
 		zDMarketConfig.softwareName = zDMarketTree.get<std::string>("softwareName");
 		zDMarketConfig.serverAddress = zDMarketTree.get<std::string>("serverAddress");
 		zDMarketConfig.softwareVersion = zDMarketTree.get<std::string>("softwareVersion");
-
+		zDMarketConfig.tradeServerAddress= zDMarketTree.get<std::string>("tradeServerAddress");
 		return true;
 	}
 	catch (boost::property_tree::ptree_error&e)

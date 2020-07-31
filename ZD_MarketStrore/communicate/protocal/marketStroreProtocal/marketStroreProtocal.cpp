@@ -11,8 +11,8 @@ MarketStoreProtocal::MarketStoreProtocal()
 		+ globalInclude.topts.dueDate + ","
 		+ globalInclude.topts.time + ","
 		+ globalInclude.topts.price + ","
-		+ globalInclude.topts.exchange+","
-		+ globalInclude.topts.getDataTime
+		+ globalInclude.topts.exchange
+		
 		+ ") "
 		+ "VALUES ";
 
@@ -21,8 +21,7 @@ MarketStoreProtocal::MarketStoreProtocal()
 		+ "("
 		+ globalInclude.tipts.constractNo + ","
 		+ globalInclude.tipts.time + ","
-		+ globalInclude.tipts.price+","
-		+ globalInclude.tipts.getDataTime
+		+ globalInclude.tipts.price
 		+ ") "
 		+ "VALUES ";
 	marketBatchMaxSize = ConfigManager::get_mutable_instance().mySqlConfig.batchNum;
@@ -65,8 +64,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			+ toDbString(zmd.dueDate) + ","
 			+ toDbString(zmd.time) + ","
 			+ toDbNum(zmd.price) + ","
-			+ toDbString(zmd.exchange)+","
-			+ toDbString(zmd.getDataTime)
+			+ toDbString(zmd.exchange)			
 			+ ")";
 		temp.time = time(NULL);
 		zdMarketBatchVector.push_back(std::move(temp));
@@ -101,8 +99,7 @@ void MarketStoreProtocal::encode_data(const boost::any& msg, std::vector<unsigne
 			"("
 			+ toDbString(cdd.contract) + ","
 			+ toDbString(cdd.time) + ","
-			+ toDbString(cdd.price)+","
-			+ toDbString(cdd.getDataTime)
+			+ toDbString(cdd.price)
 			+ ")";
 
 		temp.time = time(NULL);

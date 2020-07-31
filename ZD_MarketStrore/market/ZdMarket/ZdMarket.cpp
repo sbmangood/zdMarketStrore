@@ -25,7 +25,7 @@ bool ZdMarket::setMutex(std::mutex *mut)
 bool ZdMarket::Create()
 {
 
-#define tempTest
+//#define tempTest
 #ifdef tempTest
 /******** can delete later *********/
 m_appConfig.heartBeat = "500";
