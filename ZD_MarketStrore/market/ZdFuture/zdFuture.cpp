@@ -113,6 +113,9 @@ void ZD_Future::OnRtnTrade(CFutureRtnTradeField *pRtnTrade, CFutureRspInfoField 
 		ttdd.brokeCompany = "ZD_Company";
 		ttdd.contract = pRtnTrade->TreatyCode;
 		ttdd.dueDate=StaticDatas::get_mutable_instance().getDueDayFromContractMap(ttdd.contract);
+		size_t len = ttdd.contract.size();
+		if( (len>1 && ttdd.contract.substr(len-2,2)=="3M") || (ttdd.dueDate == "19700101"))
+			ttdd.dueDate = pRtnTrade->DeliveryDate;
 		ttdd.bidAsk = pRtnTrade->BuySale;
 		ttdd.lotQty = pRtnTrade->FilledNumber;
 		ttdd.price = pRtnTrade->FilledPrice;
